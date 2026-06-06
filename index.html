@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SCI Universal Model | Spectral Channel Integrity</title>
+    <meta name="description" content="SCI Universal Model – метод спектральної нормалізації для субтрактивних середовищ. Вісім збалансованих кольорів, спектральний лімітер, роздільні канали.">
+    <meta name="author" content="Mykhailo Kashkarov">
+    <meta property="og:title" content="SCI Universal Model">
+    <meta property="og:description" content="Детермінована спектральна нормалізація для живопису, друку та калібрування.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* Контейнер */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Шапка */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.9);
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo h1 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        .logo p {
+            font-size: 0.75rem;
+            color: #475569;
+            font-family: monospace;
+        }
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 2rem;
+        }
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .lang-btn.active {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #0f172a;
+        }
+        .lang-btn:not(.active) {
+            color: #64748b;
+        }
+
+        /* Навігація */
+        .nav {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 70px;
+            z-index: 49;
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            overflow-x: auto;
+        }
+        .nav-link {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 2rem;
+            transition: 0.2s;
+            color: #334155;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background: #f1f5f9;
+        }
+
+        /* Секції */
+        .section {
+            scroll-margin-top: 130px;
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            border-left: 4px solid #6b21a5;
+            padding-left: 1rem;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem 0;
+            color: #1e293b;
+        }
+        .section h4 {
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #334155;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .card {
+            background: #f8fafc;
+            padding: 1.2rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        .formula {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        .button {
+            display: inline-block;
+            background: #6b21a5;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 0.8rem;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .button-outline {
+            background: transparent;
+            border: 1px solid #6b21a5;
+            color: #6b21a5;
+        }
+        .button:hover {
+            background: #4c1d8a;
+        }
+        .ref-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .ref-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 3px solid #cbd5e1;
+        }
+        a {
+            color: #6b21a5;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+        @media (max-width: 700px) {
+            .section {
+                padding: 1.5rem;
+            }
+            .section h2 {
+                font-size: 1.5rem;
+            }
+        }
+        .badge {
+            background: #ede9fe;
+            color: #5b21b6;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            display: inline-block;
+        }
+        hr {
+            margin: 1rem 0;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <div class="header-inner">
+            <div class="logo">
+                <h1>SCI Universal Model</h1>
+                <p>Spectral Channel Integrity · Deterministic Normalization</p>
+            </div>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ua">UA</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav">
+    <div class="container">
+        <div class="nav-links">
+            <button class="nav-link" data-section="essence">Суть моделі</button>
+            <button class="nav-link" data-section="math">Математичний базис</button>
+            <button class="nav-link" data-section="evidence">Докази</button>
+            <button class="nav-link" data-section="tools">Генератори</button>
+            <button class="nav-link" data-section="contacts">Документи & Контакти</button>
+        </div>
+    </div>
+</div>
+
+<main class="container">
+    <!-- СЕКЦІЯ 1: СУТЬ МОДЕЛІ -->
+    <section id="essence" class="section">
+        <h2 data-ua="Суть моделі SCI" data-en="The SCI Model">Суть моделі SCI</h2>
+        
+        <p data-ua="У субтрактивних середовищах (фарби, пігменти) кожен колір має неперервний спектр відбиття. Червоний пігмент завжди відбиває невелику частку зеленого та синього – це явище називається спектральна інтерференція (crosstalk). Класичні профілі лише констатують цю проблему, але не усувають її на фізичному носії." data-en="In subtractive media (paints, pigments), every color has a continuous reflection spectrum. Red pigment always reflects a small fraction of green and blue – this is called spectral crosstalk. Traditional ICC profiles only document this problem but do not eliminate it at the physical level."></p>
+        
+        <p data-ua="Модель SCI (Spectral Channel Integrity) – це метод спектрального балансування, що ґрунтується на принципі рівноваги за найслабшою ланкою. Система будується навколо спектрального лімітера – компонента з найменшим динамічним діапазоном (у системі CMYK це Magenta, у загальному випадку – складний фіолетовий)." data-en="The SCI (Spectral Channel Integrity) model is a spectral balancing method based on equilibrium by the weakest link. The system is built around a spectral limiter – the component with the smallest dynamic range (in CMYK it is Magenta; generally, a complex violet)."></p>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4 data-ua="Вісім збалансованих кольорів" data-en="Eight balanced colors">Вісім збалансованих кольорів</h4>
+                <p data-ua="Темно-сірий, світло-сірий та шість хроматичних відтінків утворюють замкнену систему. Кожен колір має строго визначене співвідношення спектральних каналів відносно лімітера." data-en="Dark gray, light gray, and six chromatic shades form a closed system. Each color has a strictly defined ratio of spectral channels relative to the limiter."></p>
+            </div>
+            <div class="card">
+                <h4 data-ua="Спектральний лімітер" data-en="Spectral limiter">Спектральний лімітер</h4>
+                <p data-ua="Компонент, що має максимальне відбиття на краях спектра (червоний та синій) та максимальне поглинання в центральній області (зелений). Його динамічний діапазон є найменшим, тому він задає верхню та нижню референсні межі (Uref, Lref)." data-en="The component with maximum reflection at the spectral edges (red and blue) and maximum absorption in the central region (green). Its dynamic range is the smallest, therefore it sets the upper and lower reference levels (Uref, Lref)."></p>
+            </div>
+            <div class="card">
+                <h4 data-ua="Операційна роздільність каналів" data-en="Operational channel separation">Операційна роздільність каналів</h4>
+                <p data-ua="Після нормалізації канали стають незалежними. Їх можна декодувати вузькосмуговим освітленням або оптичними фільтрами без додаткової алгоритмічної корекції." data-en="After normalization, channels become independent. They can be decoded using narrow-band illumination or optical filters without additional algorithmic correction."></p>
+            </div>
+        </div>
+        
+        <p data-ua="Модель SCI універсальна: вона однаково працює в живопису (візуальне балансування фарб), у цифровому другі (QR-коди, графіка) та в калібруванні обладнання. Вона була відкрита емпірично через роки практичної роботи, а пізніше формалізована математично." data-en="The SCI model is universal: it works equally in painting (visual balancing of paints), digital printing (QR codes, graphics), and equipment calibration. It was discovered empirically through years of practice and later formalized mathematically."></p>
+        
+        <div style="margin-top: 1rem;">
+            <a href="https://astra31415926.github.io/" target="_blank" class="button" data-ua="Переглянути арт-галерею (світлочутливий живопис)" data-en="View art gallery (light-sensitive painting)">🎨 Переглянути арт-галерею</a>
+        </div>
+    </section>
+
+    <!-- СЕКЦІЯ 2: МАТЕМАТИЧНИЙ БАЗИС -->
+    <section id="math" class="section">
+        <h2 data-ua="Математичний базис" data-en="Mathematical basis">Математичний базис</h2>
+        
+        <p data-ua="Модель вводить уніфіковану референсну шкалу з двома фіксованими станами системи:" data-en="The model introduces a unified reference scale with two fixed system states:"></p>
+        <ul>
+            <li><strong data-ua="Верхній референсний рівень (Uref)" data-en="Upper Reference Level (Uref)">Верхній референсний рівень (Uref)</strong> – максимальний дозволений спектральний відгук для всіх активних каналів, обмежений найслабшим хроматичним компонентом.</li>
+            <li><strong data-ua="Нижній референсний рівень (Lref)" data-en="Lower Reference Level (Lref)">Нижній референсний рівень (Lref)</strong> – уніфікований мінімальний рівень відбиття, що відповідає залишковому спектральному відгуку лімітуючого компонента (логічний «0»).</li>
+        </ul>
+        
+        <h3 data-ua="Формальний опис" data-en="Formal description">Формальний опис</h3>
+        <div class="formula">
+            <strong>(1) Амплітудне масштабування (уніфікація верхнього рівня):</strong><br>
+            I<sub>norm</sub>(λ) = I<sub>raw</sub>(λ) · A<sub>max</sub>(L) / A<sub>max</sub>(λ)<br><br>
+            <strong>(2) Зсув нульового рівня (уніфікація нижнього рівня):</strong><br>
+            S<sub>out</sub> = (S<sub>in</sub> − L<sub>ref</sub>) / (U<sub>ref</sub> − L<sub>ref</sub>)<br><br>
+            <strong>(3) Лінійна корекція (декаплінг каналів):</strong><br>
+            <span style="font-size:0.9rem">[C<sub>1</sub>, C<sub>2</sub>, C<sub>3</sub>]<sup>T</sup><sub>decoded</sub> = M<sup>−1</sup> · [C<sub>1</sub>, C<sub>2</sub>, C<sub>3</sub>]<sup>T</sup><sub>physical</sub></span>
+        </div>
+        <p data-ua="де M – матриця коефіцієнтів перехресних перешкод, отримана експериментально для конкретного набору пігментів." data-en="where M is the crosstalk coefficient matrix obtained experimentally for a specific set of pigments."></p>
+        
+        <p data-ua="Ці перетворення дозволяють привести будь-який субтрактивний носій (набір фарб) до детермінованого стану, в якому спектральні канали стають роздільними." data-en="These transformations allow any subtractive medium (set of paints) to be brought to a deterministic state where spectral channels become separable."></p>
+        
+        <div class="badge" data-ua="Математична формалізація емпіричного методу" data-en="Mathematical formalization of an empirical method">Математична формалізація емпіричного методу</div>
+    </section>
+
+    <!-- СЕКЦІЯ 3: ДОКАЗИ ТА ЕКСПЕРИМЕНТИ -->
+    <section id="evidence" class="section">
+        <h2 data-ua="Докази та експерименти" data-en="Evidence and experiments">Докази та експерименти</h2>
+        
+        <p data-ua="Для верифікації моделі було проведено низку практичних експериментів із використанням акрилових фарб на полотні. Метою було виключити упередженість щодо конкретного принтера чи типу чорнила." data-en="To verify the model, a series of practical experiments were conducted using acrylic paints on canvas. The goal was to eliminate bias toward a specific printer or type of ink."></p>
+        
+        <ul>
+            <li data-ua="Створено референсну палітру (8 кольорів) із детермінованим спектральним відгуком." data-en="A reference palette (8 colors) with a deterministic spectral response was created."></li>
+            <li data-ua="Підібрано спектральний лімітер (фіолетовий) та виконано калібрування системи." data-en="The spectral limiter (violet) was selected and the system was calibrated."></li>
+            <li data-ua="Написано кольоровий QR-код на полотні як тестове середовище." data-en="A color QR code was painted on canvas as a test environment."></li>
+            <li data-ua="Розроблено сканер, що показує, що бачить камера, та дозволяє контролювати інтерференцію каналів у реальному часі." data-en="A scanner was developed that shows what the camera sees and allows real-time control of channel interference."></li>
+        </ul>
+        
+        <p><strong data-ua="Результат:" data-en="Result:"></strong> <span data-ua="Референсна палітра стала індикатором для налаштування сканера. Головний висновок – проблема вирішується на рівні моделі, а не спеціального алгоритму декодування." data-en="The reference palette became an indicator for scanner adjustment. The main conclusion – the problem is solved at the model level, not by a special decoding algorithm."></span></p>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4>📁 RGB матриці</h4>
+                <p data-ua="Цифрові моделі кодування каналів" data-en="Digital channel encoding models"></p>
+                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/RGB%20Matrix%20001.png" target="_blank">RGB Matrix 001</a>
+            </div>
+            <div class="card">
+                <h4>🎨 Орнаментальні QR (Batch 00-30)</h4>
+                <p data-ua="Естетично складні патерни з вкладеними даними" data-en="Aesthetically complex patterns with embedded data"></p>
+                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/ornamental_qr_00.png" target="_blank">Приклад: QRnament</a>
+            </div>
+            <div class="card">
+                <h4>🖼️ Фізичні арт-об'єкти</h4>
+                <p data-ua="Акрил на полотні, світлочутливий живопис" data-en="Acrylic on canvas, light-sensitive painting"></p>
+                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/physical_artwork_01.jpeg" target="_blank">Фото 1</a> | 
+                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/physical_artwork_03.png" target="_blank">Фото 2</a>
+            </div>
+            <div class="card">
+                <h4>📷 Інтерфейс сканера</h4>
+                <p data-ua="Аналіз того, що бачить камера" data-en="Analysis of what the camera sees"></p>
+                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/scanner_interface_01.jpg" target="_blank">Scanner view</a>
+            </div>
+        </div>
+        
+        <p data-ua="Усі матеріали (понад 40 файлів) доступні у відкритому репозиторії:" data-en="All materials (over 40 files) are available in the open repository:"></p>
+        <a href="https://github.com/Astra31415926/spectral-color-model" target="_blank" class="button button-outline">GitHub: spectral-color-model</a>
+    </section>
+
+    <!-- СЕКЦІЯ 4: ГЕНЕРАТОРИ ТА ІНСТРУМЕНТИ -->
+    <section id="tools" class="section">
+        <h2 data-ua="Генератори та інструменти" data-en="Generators and tools">Генератори та інструменти</h2>
+        
+        <p data-ua="На основі SCI-моделі створено два генератори кольорових двовимірних кодів, а також інструмент для сканування та аналізу." data-en="Based on the SCI model, two color 2D code generators have been created, as well as a scanning and analysis tool."></p>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4>🎲 Spectrum QR</h4>
+                <p data-ua="Генератор і сканер кольорових QR-кодів. Інформація кодується в трьох каналах (RGB), що дозволяє збільшити щільність даних до 3 разів порівняно зі стандартними чорно-білими кодами." data-en="Generator and scanner of color QR codes. Information is encoded in three channels (RGB), increasing data density up to 3 times compared to standard black-and-white codes."></p>
+                <a href="https://astra31415926.github.io/QR.G.B.-ART/" target="_blank" class="button button-outline">Spectrum QR →</a>
+            </div>
+            <div class="card">
+                <h4>🌀 QRnament v3.5</h4>
+                <p data-ua="Генератор орнаментальних QR-кодів (мандалового типу). Коди не зчитуються стандартними сканерами, але коректно розпізнаються спеціалізованим сканером, що дозволяє використовувати їх як унікальні цифрові арт-об'єкти." data-en="Generator of ornamental QR codes (mandala type). Codes are not readable by standard scanners but are correctly recognized by a specialized scanner, allowing them to be used as unique digital art objects."></p>
+                <a href="https://astra31415926.github.io/QRnament2/" target="_blank" class="button button-outline">QRnament →</a>
+            </div>
+        </div>
+        
+        <hr>
+        <p data-ua="Ці інструменти демонструють практичну реалізацію принципу операційної роздільності каналів у субтрактивному середовищі." data-en="These tools demonstrate the practical implementation of the operational channel separation principle in a subtractive environment."></p>
+    </section>
+
+    <!-- СЕКЦІЯ 5: ДОКУМЕНТИ ТА КОНТАКТИ -->
+    <section id="contacts" class="section">
+        <h2 data-ua="Документи та контакти" data-en="Documents & contacts">Документи та контакти</h2>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4>📄 Наукова публікація (Zenodo)</h4>
+                <p data-ua="Повна версія White Paper: «SCI Universal Model: Deterministic Spectral Response Normalization»" data-en="Full version of the White Paper: 'SCI Universal Model: Deterministic Spectral Response Normalization'"></p>
+                <a href="https://zenodo.org/records/19633526" target="_blank" class="button button-outline">Zenodo →</a>
+            </div>
+            <div class="card">
+                <h4>📁 GitHub проєкти</h4>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li><a href="https://github.com/Astra31415926/spectral-color-model" target="_blank">spectral-color-model (SCI core)</a></li>
+                    <li><a href="https://github.com/Astra31415926" target="_blank">Інші репозиторії (QR.G.B.-ART, QRnament)</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📞 Контакти</h4>
+                <p><strong>Mykhailo Kashkarov</strong><br>
+                📧 <a href="mailto:bakminsterfuler@gmail.com">bakminsterfuler@gmail.com</a><br>
+                📱 +380 63 505 8292<br>
+                🎨 <a href="https://astra31415926.github.io/" target="_blank">KASHKAROV RGB ART</a></p>
+            </div>
+        </div>
+        
+        <p data-ua="Для співпраці, інтеграції моделі в промислові рішення або отримання технічної документації – будь ласка, зв'яжіться за вказаними контактами." data-en="For collaboration, integration of the model into industrial solutions, or obtaining technical documentation, please contact me using the information above."></p>
+    </section>
+</main>
+
+<footer>
+    <p data-ua="© 2026 Mykhailo Kashkarov · SCI Universal Model · Детермінована спектральна нормалізація" data-en="© 2026 Mykhailo Kashkarov · SCI Universal Model · Deterministic Spectral Normalization"></p>
+    <p style="margin-top: 0.5rem; font-size: 0.7rem;" data-ua="Вільне поширення зі збереженням авторства. Запрошуються до співпраці дослідники та інженери." data-en="Free distribution with attribution. Researchers and engineers are invited to collaborate."></p>
+</footer>
+
+<script>
+    // БАЗОВА ЛОКАЛІЗАЦІЯ
+    (function() {
+        const langBtns = document.querySelectorAll('.lang-btn');
+        let currentLang = 'ua'; // 'ua' or 'en'
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            // update buttons active class
+            langBtns.forEach(btn => {
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // update all elements with data-ua and data-en
+            document.querySelectorAll('[data-ua][data-en]').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if(text) {
+                    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.value = text;
+                    } else {
+                        el.innerText = text;
+                    }
+                }
+            });
+            
+            // special for placeholders or titles
+            document.querySelectorAll('[data-ua-title][data-en-title]').forEach(el => {
+                const titleText = el.getAttribute(`data-${lang}-title`);
+                if(titleText) el.setAttribute('title', titleText);
+            });
+            
+            // update h2, h3 etc if needed
+            document.querySelectorAll('h2, h3, .card h4, .badge, .button').forEach(el => {
+                if(el.hasAttribute(`data-${lang}`)) {
+                    const newText = el.getAttribute(`data-${lang}`);
+                    if(newText && el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
+                        el.innerText = newText;
+                    } else if(newText && el.tagName === 'BUTTON' && el.classList.contains('button')) {
+                        // keep inner maybe other nodes, but we simplify
+                    } else if(newText && (el.tagName === 'H2' || el.tagName === 'H3' || el.classList.contains('badge'))) {
+                        el.innerText = newText;
+                    }
+                }
+            });
+            
+            // special for buttons with complex content
+            document.querySelectorAll('.button').forEach(btn => {
+                if(btn.hasAttribute(`data-${lang}`) && !btn.querySelector('svg')) {
+                    const originalText = btn.getAttribute(`data-${lang}`);
+                    if(originalText && (btn.innerText.includes('Переглянути') || btn.innerText.includes('View') || btn.innerText.includes('Spectrum') || btn.innerText.includes('QRnament') || btn.innerText.includes('GitHub') || btn.innerText.includes('Zenodo'))) {
+                        btn.innerText = originalText;
+                    }
+                }
+            });
+            
+            // update footer if needed
+            const footerP = document.querySelector('footer p');
+            if(footerP) {
+                if(currentLang === 'ua') footerP.innerHTML = '© 2026 Mykhailo Kashkarov · SCI Universal Model · Детермінована спектральна нормалізація';
+                else footerP.innerHTML = '© 2026 Mykhailo Kashkarov · SCI Universal Model · Deterministic Spectral Normalization';
+            }
+        }
+        
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const lang = btn.getAttribute('data-lang');
+                if(lang === 'ua') setLanguage('ua');
+                else if(lang === 'en') setLanguage('en');
+            });
+        });
+        
+        // initialize
+        setLanguage('ua');
+        
+        // scroll to section on nav click
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const sectionId = link.getAttribute('data-section');
+                const section = document.getElementById(sectionId);
+                if(section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    })();
+</script>
+</body>
+</html>
