@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>SCI Universal Model | Spectral Channel Integrity</title>
-    <meta name="description" content="SCI Universal Model – метод спектральної нормалізації для субтрактивних середовищ. Вісім збалансованих кольорів, спектральний лімітер, роздільні канали.">
+    <title>SCI Model | Spectral Channel Integrity</title>
+    <meta name="description" content="SCI Universal Model – метод нормалізації спектрального відгуку для субтрактивних середовищ. Детерміністичне кодування, стеганографія, комп'ютерний зір.">
     <meta name="author" content="Mykhailo Kashkarov">
-    <meta property="og:title" content="SCI Universal Model">
-    <meta property="og:description" content="Детермінована спектральна нормалізація для живопису, друку та калібрування.">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -19,421 +16,389 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: #f8fafc;
             color: #0f172a;
             line-height: 1.5;
-            scroll-behavior: smooth;
         }
 
-        /* Контейнер */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* Шапка */
-        .header {
+        /* Header & Navigation */
+        .site-header {
             background: white;
             border-bottom: 1px solid #e2e8f0;
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
             backdrop-filter: blur(8px);
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
         }
-        .header-inner {
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
             flex-wrap: wrap;
             gap: 1rem;
         }
+
         .logo h1 {
             font-size: 1.35rem;
             font-weight: 600;
             letter-spacing: -0.3px;
         }
+
         .logo p {
-            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
             color: #475569;
-            font-family: monospace;
         }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #0f172a;
+        }
+
         .lang-switch {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
             background: #f1f5f9;
-            padding: 0.25rem;
+            padding: 0.2rem;
             border-radius: 2rem;
         }
+
         .lang-btn {
             border: none;
             background: transparent;
-            padding: 0.4rem 1rem;
+            padding: 0.35rem 0.9rem;
             border-radius: 2rem;
             font-weight: 500;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: 0.2s;
         }
+
         .lang-btn.active {
             background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             color: #0f172a;
         }
-        .lang-btn:not(.active) {
-            color: #64748b;
+
+        /* Main container */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: flex;
+            gap: 2rem;
         }
 
-        /* Навігація */
-        .nav {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
+        /* Sidebar navigation */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
             position: sticky;
-            top: 70px;
-            z-index: 49;
+            top: 100px;
+            height: fit-content;
         }
-        .nav-links {
+
+        .sidebar-nav {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 0.5rem;
-            padding: 0.75rem 0;
-            overflow-x: auto;
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1rem;
         }
-        .nav-link {
-            background: none;
-            border: none;
-            padding: 0.5rem 1rem;
+
+        .sidebar-nav a {
+            color: #475569;
+            text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
-            cursor: pointer;
-            border-radius: 2rem;
+            padding: 0.4rem 0;
             transition: 0.2s;
-            color: #334155;
-            white-space: nowrap;
-        }
-        .nav-link:hover {
-            background: #f1f5f9;
         }
 
-        /* Секції */
-        .section {
-            scroll-margin-top: 130px;
-            background: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid #eef2f6;
+        .sidebar-nav a:hover {
+            color: #0f172a;
+            border-left: 2px solid #0f172a;
+            margin-left: -1rem;
+            padding-left: 1rem;
         }
+
+        /* Content */
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .section {
+            scroll-margin-top: 100px;
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid #eef2f8;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
         .section h2 {
             font-size: 1.8rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
             letter-spacing: -0.02em;
-            border-left: 4px solid #6b21a5;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #14b8a6;
             padding-left: 1rem;
         }
+
         .section h3 {
             font-size: 1.3rem;
-            font-weight: 500;
+            font-weight: 600;
             margin: 1.5rem 0 0.75rem 0;
             color: #1e293b;
         }
+
         .section h4 {
             font-weight: 600;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem 0;
             color: #334155;
         }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-        .card {
-            background: #f8fafc;
-            padding: 1.2rem;
+
+        .badge {
+            background: #eef2ff;
+            color: #1e40af;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 1rem;
-            border: 1px solid #e2e8f0;
+            display: inline-block;
+            margin-bottom: 1rem;
         }
-        .formula {
-            background: #0f172a;
-            color: #e2e8f0;
+
+        .principle-block {
+            background: #f8fafc;
+            border-left: 3px solid #14b8a6;
             padding: 1.2rem;
+            margin: 1.2rem 0;
             border-radius: 0.75rem;
-            font-family: 'Courier New', monospace;
+        }
+
+        .citation {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             overflow-x: auto;
-            font-size: 0.9rem;
             margin: 1rem 0;
         }
+
         .button {
             display: inline-block;
-            background: #6b21a5;
+            background: #0f172a;
             color: white;
-            padding: 0.6rem 1.2rem;
+            padding: 0.5rem 1rem;
             border-radius: 2rem;
             text-decoration: none;
             font-weight: 500;
-            margin-top: 0.8rem;
-            transition: 0.2s;
-            border: none;
-            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
         }
+
         .button-outline {
             background: transparent;
-            border: 1px solid #6b21a5;
-            color: #6b21a5;
+            border: 1px solid #0f172a;
+            color: #0f172a;
         }
-        .button:hover {
-            background: #4c1d8a;
+
+        .project-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
         }
-        .ref-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        .ref-list li {
-            margin-bottom: 0.5rem;
-            padding-left: 1rem;
-            border-left: 3px solid #cbd5e1;
-        }
-        a {
-            color: #6b21a5;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+
         footer {
             text-align: center;
             padding: 2rem;
             border-top: 1px solid #e2e8f0;
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: #475569;
+            font-size: 0.75rem;
+            color: #64748b;
         }
-        @media (max-width: 700px) {
+
+        @media (max-width: 800px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                border-bottom: 1px solid #e2e8f0;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                border-left: none;
+                gap: 1rem;
+            }
+            .sidebar-nav a {
+                border-left: none;
+                padding: 0.2rem 0;
+            }
             .section {
-                padding: 1.5rem;
+                padding: 1.2rem;
             }
             .section h2 {
                 font-size: 1.5rem;
             }
         }
-        .badge {
-            background: #ede9fe;
-            color: #5b21b6;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 1rem;
-            display: inline-block;
-        }
-        hr {
-            margin: 1rem 0;
-            border: none;
-            border-top: 1px solid #e2e8f0;
-        }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="container">
-        <div class="header-inner">
-            <div class="logo">
-                <h1>SCI Universal Model</h1>
-                <p>Spectral Channel Integrity · Deterministic Normalization</p>
-            </div>
-            <div class="lang-switch">
-                <button class="lang-btn active" data-lang="ua">UA</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-            </div>
+<header class="site-header">
+    <div class="header-container">
+        <div class="logo">
+            <h1>SCI Universal Model</h1>
+            <p>Spectral Channel Integrity</p>
         </div>
-    </div>
-</div>
-
-<div class="nav">
-    <div class="container">
         <div class="nav-links">
-            <button class="nav-link" data-section="essence">Суть моделі</button>
-            <button class="nav-link" data-section="math">Математичний базис</button>
-            <button class="nav-link" data-section="evidence">Докази</button>
-            <button class="nav-link" data-section="tools">Генератори</button>
-            <button class="nav-link" data-section="contacts">Документи & Контакти</button>
+            <a href="#crosstalk">Природа Crosstalk</a>
+            <a href="#applications">Прикладне значення</a>
+            <a href="#author">Автор</a>
+            <a href="#contacts">Контакти</a>
+        </div>
+        <div class="lang-switch">
+            <button class="lang-btn active" data-lang="ua">UA</button>
+            <button class="lang-btn" data-lang="en">EN</button>
         </div>
     </div>
-</div>
+</header>
 
-<main class="container">
-    <!-- СЕКЦІЯ 1: СУТЬ МОДЕЛІ -->
-    <section id="essence" class="section">
-        <h2 data-ua="Суть моделі SCI" data-en="The SCI Model">Суть моделі SCI</h2>
-        
-        <p data-ua="У субтрактивних середовищах (фарби, пігменти) кожен колір має неперервний спектр відбиття. Червоний пігмент завжди відбиває невелику частку зеленого та синього – це явище називається спектральна інтерференція (crosstalk). Класичні профілі лише констатують цю проблему, але не усувають її на фізичному носії." data-en="In subtractive media (paints, pigments), every color has a continuous reflection spectrum. Red pigment always reflects a small fraction of green and blue – this is called spectral crosstalk. Traditional ICC profiles only document this problem but do not eliminate it at the physical level."></p>
-        
-        <p data-ua="Модель SCI (Spectral Channel Integrity) – це метод спектрального балансування, що ґрунтується на принципі рівноваги за найслабшою ланкою. Система будується навколо спектрального лімітера – компонента з найменшим динамічним діапазоном (у системі CMYK це Magenta, у загальному випадку – складний фіолетовий)." data-en="The SCI (Spectral Channel Integrity) model is a spectral balancing method based on equilibrium by the weakest link. The system is built around a spectral limiter – the component with the smallest dynamic range (in CMYK it is Magenta; generally, a complex violet)."></p>
-        
-        <div class="card-grid">
-            <div class="card">
-                <h4 data-ua="Вісім збалансованих кольорів" data-en="Eight balanced colors">Вісім збалансованих кольорів</h4>
-                <p data-ua="Темно-сірий, світло-сірий та шість хроматичних відтінків утворюють замкнену систему. Кожен колір має строго визначене співвідношення спектральних каналів відносно лімітера." data-en="Dark gray, light gray, and six chromatic shades form a closed system. Each color has a strictly defined ratio of spectral channels relative to the limiter."></p>
-            </div>
-            <div class="card">
-                <h4 data-ua="Спектральний лімітер" data-en="Spectral limiter">Спектральний лімітер</h4>
-                <p data-ua="Компонент, що має максимальне відбиття на краях спектра (червоний та синій) та максимальне поглинання в центральній області (зелений). Його динамічний діапазон є найменшим, тому він задає верхню та нижню референсні межі (Uref, Lref)." data-en="The component with maximum reflection at the spectral edges (red and blue) and maximum absorption in the central region (green). Its dynamic range is the smallest, therefore it sets the upper and lower reference levels (Uref, Lref)."></p>
-            </div>
-            <div class="card">
-                <h4 data-ua="Операційна роздільність каналів" data-en="Operational channel separation">Операційна роздільність каналів</h4>
-                <p data-ua="Після нормалізації канали стають незалежними. Їх можна декодувати вузькосмуговим освітленням або оптичними фільтрами без додаткової алгоритмічної корекції." data-en="After normalization, channels become independent. They can be decoded using narrow-band illumination or optical filters without additional algorithmic correction."></p>
+<div class="main-container">
+    <aside class="sidebar">
+        <div class="sidebar-nav">
+            <a href="#crosstalk" data-ua="Природа Crosstalk" data-en="The Nature of Crosstalk">Природа Crosstalk</a>
+            <a href="#solution" data-ua="Суть рішення SCI" data-en="The SCI Solution">Суть рішення SCI</a>
+            <a href="#reversibility" data-ua="Зворотність процесу" data-en="Reversibility">Зворотність процесу</a>
+            <a href="#applications" data-ua="Прикладне значення" data-en="Applications">Прикладне значення</a>
+            <a href="#author" data-ua="Автор" data-en="Author">Автор</a>
+            <a href="#contacts" data-ua="Контакти та проєкти" data-en="Contacts & Projects">Контакти та проєкти</a>
+        </div>
+    </aside>
+
+    <div class="content">
+        <!-- Hero block -->
+        <div class="section" style="background: #f1f5f9;">
+            <div class="badge" data-ua="Науково-прикладна концепція" data-en="Scientific applied concept">Науково-прикладна концепція</div>
+            <h2 data-ua="Замкнута система спектральних констант" data-en="Closed System of Spectral Constants">Замкнута система спектральних констант</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong data-ua="Автор:" data-en="Author:">Автор:</strong> Mykhailo Kashkarov</p>
+            <p data-ua="Модель SCI — метод нормалізації спектрального відгуку в субтрактивних середовищах, що забезпечує детерміністичне розділення каналів для задач комп'ютерного зору та стеганографії." data-en="The SCI model is a spectral response normalization method for subtractive media, providing deterministic channel separation for computer vision and steganography.">Модель SCI — метод нормалізації спектрального відгуку в субтрактивних середовищах, що забезпечує детерміністичне розділення каналів для задач комп'ютерного зору та стеганографії.</p>
+        </div>
+
+        <!-- 1. Фізична природа Crosstalk та суть моделі SCI -->
+        <div id="crosstalk" class="section">
+            <h2 data-ua="1. Фізична природа Crosstalk" data-en="1. The Nature of Crosstalk">1. Фізична природа Crosstalk</h2>
+            <p data-ua="Субтрактивна модель (CMYK) не є дзеркальним відображенням аддитивної (RGB). Фізичні пігменти принципово не здатні на 100% поглинати цільовий спектр і повністю відбивати нецільовий." data-en="The subtractive model (CMYK) is not a mirror image of the additive one (RGB). Physical pigments are fundamentally incapable of 100% absorption of the target spectrum and complete reflection of the non-target spectrum.">Субтрактивна модель (CMYK) не є дзеркальним відображенням аддитивної (RGB). Фізичні пігменти принципово не здатні на 100% поглинати цільовий спектр і повністю відбивати нецільовий.</p>
+            
+            <div class="principle-block">
+                <h4 data-ua="Головний деструктивний фактор" data-en="Primary destructive factor">Головний деструктивний фактор</h4>
+                <p data-ua="Різні пігменти роблять це з різною інтенсивністю та паразитно перекривають сусідні спектри. Жовтий пігмент близький до ідеалу (висока інтенсивність), тоді як маджента та ціан (які утворюють складний фіолетовий) мають найвужчий динамічний діапазон і високу спектральну інтерференцію (crosstalk)." data-en="Different pigments do this with different intensities and parasitically overlap adjacent spectra. Yellow pigment is close to ideal (high intensity), while magenta and cyan (which form a complex violet) have the narrowest dynamic range and high spectral interference (crosstalk).">Різні пігменти роблять це з різною інтенсивністю та паразитно перекривають сусідні спектри. Жовтий пігмент близький до ідеалу (висока інтенсивність), тоді як маджента та ціан (які утворюють складний фіолетовий) мають найвужчий динамічний діапазон і високу спектральну інтерференцію (crosstalk).</p>
+                <p data-ua="<strong>Наслідок:</strong> через цей дисбаланс математично точний перенос багатоканальної інформації з екрана на папір класичними методами неможливий — пропорції каналів безповоротно спотворюються." data-en="<strong>Consequence:</strong> due to this imbalance, mathematically accurate transfer of multi-channel information from screen to paper using classical methods is impossible — channel proportions are irreversibly distorted."><strong>Наслідок:</strong> через цей дисбаланс математично точний перенос багатоканальної інформації з екрана на папір класичними методами неможливий — пропорції каналів безповоротно спотворюються.</p>
             </div>
         </div>
-        
-        <p data-ua="Модель SCI універсальна: вона однаково працює в живопису (візуальне балансування фарб), у цифровому другі (QR-коди, графіка) та в калібруванні обладнання. Вона була відкрита емпірично через роки практичної роботи, а пізніше формалізована математично." data-en="The SCI model is universal: it works equally in painting (visual balancing of paints), digital printing (QR codes, graphics), and equipment calibration. It was discovered empirically through years of practice and later formalized mathematically."></p>
-        
-        <div style="margin-top: 1rem;">
-            <a href="https://astra31415926.github.io/" target="_blank" class="button" data-ua="Переглянути арт-галерею (світлочутливий живопис)" data-en="View art gallery (light-sensitive painting)">🎨 Переглянути арт-галерею</a>
-        </div>
-    </section>
 
-    <!-- СЕКЦІЯ 2: МАТЕМАТИЧНИЙ БАЗИС -->
-    <section id="math" class="section">
-        <h2 data-ua="Математичний базис" data-en="Mathematical basis">Математичний базис</h2>
-        
-        <p data-ua="Модель вводить уніфіковану референсну шкалу з двома фіксованими станами системи:" data-en="The model introduces a unified reference scale with two fixed system states:"></p>
-        <ul>
-            <li><strong data-ua="Верхній референсний рівень (Uref)" data-en="Upper Reference Level (Uref)">Верхній референсний рівень (Uref)</strong> – максимальний дозволений спектральний відгук для всіх активних каналів, обмежений найслабшим хроматичним компонентом.</li>
-            <li><strong data-ua="Нижній референсний рівень (Lref)" data-en="Lower Reference Level (Lref)">Нижній референсний рівень (Lref)</strong> – уніфікований мінімальний рівень відбиття, що відповідає залишковому спектральному відгуку лімітуючого компонента (логічний «0»).</li>
-        </ul>
-        
-        <h3 data-ua="Формальний опис" data-en="Formal description">Формальний опис</h3>
-        <div class="formula">
-            <strong>(1) Амплітудне масштабування (уніфікація верхнього рівня):</strong><br>
-            I<sub>norm</sub>(λ) = I<sub>raw</sub>(λ) · A<sub>max</sub>(L) / A<sub>max</sub>(λ)<br><br>
-            <strong>(2) Зсув нульового рівня (уніфікація нижнього рівня):</strong><br>
-            S<sub>out</sub> = (S<sub>in</sub> − L<sub>ref</sub>) / (U<sub>ref</sub> − L<sub>ref</sub>)<br><br>
-            <strong>(3) Лінійна корекція (декаплінг каналів):</strong><br>
-            <span style="font-size:0.9rem">[C<sub>1</sub>, C<sub>2</sub>, C<sub>3</sub>]<sup>T</sup><sub>decoded</sub> = M<sup>−1</sup> · [C<sub>1</sub>, C<sub>2</sub>, C<sub>3</sub>]<sup>T</sup><sub>physical</sub></span>
+        <div id="solution" class="section">
+            <h2 data-ua="2. Суть рішення SCI: балансування через деградацію яскравості" data-en="2. The SCI Solution: Balancing via Brightness Degradation">2. Суть рішення SCI: балансування через деградацію яскравості</h2>
+            <p data-ua="Модель SCI не намагається порушити закони фізики та «очистити» фарбу від crosstalk. Замість цього вона гомогенізує (робить однаковим) цей недолік для всієї системи." data-en="The SCI model does not attempt to violate the laws of physics and 'clean' the paint from crosstalk. Instead, it homogenizes (makes uniform) this defect for the entire system.">Модель SCI не намагається порушити закони фізики та «очистити» фарбу від crosstalk. Замість цього вона гомогенізує (робить однаковим) цей недолік для всієї системи.</p>
+            
+            <div class="principle-block">
+                <h4 data-ua="Принцип лімітування" data-en="Limiting principle">Принцип лімітування</h4>
+                <p data-ua="Алгоритм штучно занижує спектральні характеристики всіх «сильних» та яскравих кольорів (наприклад, жовтого) до рівня найслабшої та найтьмянішої ланки — складного фіолетового." data-en="The algorithm artificially lowers the spectral characteristics of all 'strong' and bright colors (e.g., yellow) to the level of the weakest and dimmest link — complex violet.">Алгоритм штучно занижує спектральні характеристики всіх «сильних» та яскравих кольорів (наприклад, жовтого) до рівня найслабшої та найтьмянішої ланки — складного фіолетового.</p>
+            </div>
+            
+            <p data-ua="<strong>Результат:</strong> ми отримуємо замкнуту, збалансовану систему кольорових зон. Візуально зображення стає менш контрастним і більш тьмяним. Але ентропія системи прямує до нуля: відносні пропорції та співвідношення між каналами зберігаються з абсолютною математичною строгістю." data-en="<strong>Result:</strong> we obtain a closed, balanced system of color zones. Visually, the image becomes less contrasty and more dim. But the entropy of the system approaches zero: the relative proportions and ratios between channels are preserved with absolute mathematical rigor."><strong>Результат:</strong> ми отримуємо замкнуту, збалансовану систему кольорових зон. Візуально зображення стає менш контрастним і більш тьмяним. Але ентропія системи прямує до нуля: відносні пропорції та співвідношення між каналами зберігаються з абсолютною математичною строгістю.</p>
+            <p data-ua="Індустрія поліграфії жертвує точністю заради комерційної соковитості. SCI жертвує соковитістю заради абсолютної точності даних." data-en="The printing industry sacrifices accuracy for commercial vibrancy. SCI sacrifices vibrancy for absolute data accuracy.">Індустрія поліграфії жертвує точністю заради комерційної соковитості. SCI жертвує соковитістю заради абсолютної точності даних.</p>
         </div>
-        <p data-ua="де M – матриця коефіцієнтів перехресних перешкод, отримана експериментально для конкретного набору пігментів." data-en="where M is the crosstalk coefficient matrix obtained experimentally for a specific set of pigments."></p>
-        
-        <p data-ua="Ці перетворення дозволяють привести будь-який субтрактивний носій (набір фарб) до детермінованого стану, в якому спектральні канали стають роздільними." data-en="These transformations allow any subtractive medium (set of paints) to be brought to a deterministic state where spectral channels become separable."></p>
-        
-        <div class="badge" data-ua="Математична формалізація емпіричного методу" data-en="Mathematical formalization of an empirical method">Математична формалізація емпіричного методу</div>
-    </section>
 
-    <!-- СЕКЦІЯ 3: ДОКАЗИ ТА ЕКСПЕРИМЕНТИ -->
-    <section id="evidence" class="section">
-        <h2 data-ua="Докази та експерименти" data-en="Evidence and experiments">Докази та експерименти</h2>
-        
-        <p data-ua="Для верифікації моделі було проведено низку практичних експериментів із використанням акрилових фарб на полотні. Метою було виключити упередженість щодо конкретного принтера чи типу чорнила." data-en="To verify the model, a series of practical experiments were conducted using acrylic paints on canvas. The goal was to eliminate bias toward a specific printer or type of ink."></p>
-        
-        <ul>
-            <li data-ua="Створено референсну палітру (8 кольорів) із детермінованим спектральним відгуком." data-en="A reference palette (8 colors) with a deterministic spectral response was created."></li>
-            <li data-ua="Підібрано спектральний лімітер (фіолетовий) та виконано калібрування системи." data-en="The spectral limiter (violet) was selected and the system was calibrated."></li>
-            <li data-ua="Написано кольоровий QR-код на полотні як тестове середовище." data-en="A color QR code was painted on canvas as a test environment."></li>
-            <li data-ua="Розроблено сканер, що показує, що бачить камера, та дозволяє контролювати інтерференцію каналів у реальному часі." data-en="A scanner was developed that shows what the camera sees and allows real-time control of channel interference."></li>
-        </ul>
-        
-        <p><strong data-ua="Результат:" data-en="Result:"></strong> <span data-ua="Референсна палітра стала індикатором для налаштування сканера. Головний висновок – проблема вирішується на рівні моделі, а не спеціального алгоритму декодування." data-en="The reference palette became an indicator for scanner adjustment. The main conclusion – the problem is solved at the model level, not by a special decoding algorithm."></span></p>
-        
-        <div class="card-grid">
-            <div class="card">
-                <h4>📁 RGB матриці</h4>
-                <p data-ua="Цифрові моделі кодування каналів" data-en="Digital channel encoding models"></p>
-                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/RGB%20Matrix%20001.png" target="_blank">RGB Matrix 001</a>
-            </div>
-            <div class="card">
-                <h4>🎨 Орнаментальні QR (Batch 00-30)</h4>
-                <p data-ua="Естетично складні патерни з вкладеними даними" data-en="Aesthetically complex patterns with embedded data"></p>
-                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/ornamental_qr_00.png" target="_blank">Приклад: QRnament</a>
-            </div>
-            <div class="card">
-                <h4>🖼️ Фізичні арт-об'єкти</h4>
-                <p data-ua="Акрил на полотні, світлочутливий живопис" data-en="Acrylic on canvas, light-sensitive painting"></p>
-                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/physical_artwork_01.jpeg" target="_blank">Фото 1</a> | 
-                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/physical_artwork_03.png" target="_blank">Фото 2</a>
-            </div>
-            <div class="card">
-                <h4>📷 Інтерфейс сканера</h4>
-                <p data-ua="Аналіз того, що бачить камера" data-en="Analysis of what the camera sees"></p>
-                <a href="https://github.com/Astra31415926/spectral-color-model/blob/main/scanner_interface_01.jpg" target="_blank">Scanner view</a>
-            </div>
+        <div id="reversibility" class="section">
+            <h2 data-ua="3. Зворотність процесу: цифрова регенерація" data-en="3. Reversibility: Digital Regeneration">3. Зворотність процесу: цифрова регенерація</h2>
+            <p data-ua="Оскільки пропорції спектральних каналів на фізичному носії збережені без спотворень, процес стає математично зворотним:" data-en="Since the proportions of spectral channels on the physical medium are preserved without distortion, the process becomes mathematically reversible:">Оскільки пропорції спектральних каналів на фізичному носії збережені без спотворень, процес стає математично зворотним:</p>
+            <p data-ua="Фізичний відбиток може бути повторно оцифрований (сканований), після чого в цифровому середовищі, шляхом лінійного нормування контрасту, зображення повертається до своїх вихідних RGB-характеристик без втрати кольорової інформації." data-en="The physical print can be re-digitized (scanned), after which, in the digital environment, through linear contrast normalization, the image returns to its original RGB characteristics without loss of color information.">Фізичний відбиток може бути повторно оцифрований (сканований), після чого в цифровому середовищі, шляхом лінійного нормування контрасту, зображення повертається до своїх вихідних RGB-характеристик без втрати кольорової інформації.</p>
         </div>
-        
-        <p data-ua="Усі матеріали (понад 40 файлів) доступні у відкритому репозиторії:" data-en="All materials (over 40 files) are available in the open repository:"></p>
-        <a href="https://github.com/Astra31415926/spectral-color-model" target="_blank" class="button button-outline">GitHub: spectral-color-model</a>
-    </section>
 
-    <!-- СЕКЦІЯ 4: ГЕНЕРАТОРИ ТА ІНСТРУМЕНТИ -->
-    <section id="tools" class="section">
-        <h2 data-ua="Генератори та інструменти" data-en="Generators and tools">Генератори та інструменти</h2>
-        
-        <p data-ua="На основі SCI-моделі створено два генератори кольорових двовимірних кодів, а також інструмент для сканування та аналізу." data-en="Based on the SCI model, two color 2D code generators have been created, as well as a scanning and analysis tool."></p>
-        
-        <div class="card-grid">
-            <div class="card">
-                <h4>🎲 Spectrum QR</h4>
-                <p data-ua="Генератор і сканер кольорових QR-кодів. Інформація кодується в трьох каналах (RGB), що дозволяє збільшити щільність даних до 3 разів порівняно зі стандартними чорно-білими кодами." data-en="Generator and scanner of color QR codes. Information is encoded in three channels (RGB), increasing data density up to 3 times compared to standard black-and-white codes."></p>
-                <a href="https://astra31415926.github.io/QR.G.B.-ART/" target="_blank" class="button button-outline">Spectrum QR →</a>
-            </div>
-            <div class="card">
-                <h4>🌀 QRnament v3.5</h4>
-                <p data-ua="Генератор орнаментальних QR-кодів (мандалового типу). Коди не зчитуються стандартними сканерами, але коректно розпізнаються спеціалізованим сканером, що дозволяє використовувати їх як унікальні цифрові арт-об'єкти." data-en="Generator of ornamental QR codes (mandala type). Codes are not readable by standard scanners but are correctly recognized by a specialized scanner, allowing them to be used as unique digital art objects."></p>
-                <a href="https://astra31415926.github.io/QRnament2/" target="_blank" class="button button-outline">QRnament →</a>
-            </div>
-        </div>
-        
-        <hr>
-        <p data-ua="Ці інструменти демонструють практичну реалізацію принципу операційної роздільності каналів у субтрактивному середовищі." data-en="These tools demonstrate the practical implementation of the operational channel separation principle in a subtractive environment."></p>
-    </section>
-
-    <!-- СЕКЦІЯ 5: ДОКУМЕНТИ ТА КОНТАКТИ -->
-    <section id="contacts" class="section">
-        <h2 data-ua="Документи та контакти" data-en="Documents & contacts">Документи та контакти</h2>
-        
-        <div class="card-grid">
-            <div class="card">
-                <h4>📄 Наукова публікація (Zenodo)</h4>
-                <p data-ua="Повна версія White Paper: «SCI Universal Model: Deterministic Spectral Response Normalization»" data-en="Full version of the White Paper: 'SCI Universal Model: Deterministic Spectral Response Normalization'"></p>
-                <a href="https://zenodo.org/records/19633526" target="_blank" class="button button-outline">Zenodo →</a>
-            </div>
-            <div class="card">
-                <h4>📁 GitHub проєкти</h4>
-                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
-                    <li><a href="https://github.com/Astra31415926/spectral-color-model" target="_blank">spectral-color-model (SCI core)</a></li>
-                    <li><a href="https://github.com/Astra31415926" target="_blank">Інші репозиторії (QR.G.B.-ART, QRnament)</a></li>
+        <div id="applications" class="section">
+            <h2 data-ua="4. Прикладне значення" data-en="4. Applications">4. Прикладне значення</h2>
+            <p data-ua="Для людського сприйняття тьмяна картинка — це мінус. Але для систем машинного зору та прихованого кодування даних (багатошарових кольорових QR-кодів) — це єдиний спосіб вижити." data-en="For human perception, a dim image is a disadvantage. But for machine vision systems and data hiding (multi-layer color QR codes), it is the only way to survive.">Для людського сприйняття тьмяна картинка — це мінус. Але для систем машинного зору та прихованого кодування даних (багатошарових кольорових QR-кодів) — це єдиний спосіб вижити.</p>
+            <div class="principle-block">
+                <ul style="margin-left: 1.5rem;">
+                    <li data-ua="При стандартному друці crosstalk змішує дані каналів, спричиняючи критичні помилки дешифрації (інформація затирається шумом)." data-en="In standard printing, crosstalk mixes channel data, causing critical decoding errors (information is obscured by noise).">При стандартному друці crosstalk змішує дані каналів, спричиняючи критичні помилки дешифрації (інформація затирається шумом).</li>
+                    <li data-ua="Модель SCI ізолює канали один від одного всередині субтрактивного середовища, перетворюючи колір з «декоративного елемента» на надійний, неспотворюваний контейнер для зберігання бінарних даних." data-en="The SCI model isolates channels from each other within the subtractive environment, turning color from a 'decorative element' into a reliable, undistorted container for binary data storage.">Модель SCI ізолює канали один від одного всередині субтрактивного середовища, перетворюючи колір з «декоративного елемента» на надійний, неспотворюваний контейнер для зберігання бінарних даних.</li>
                 </ul>
             </div>
-            <div class="card">
-                <h4>📞 Контакти</h4>
-                <p><strong>Mykhailo Kashkarov</strong><br>
-                📧 <a href="mailto:bakminsterfuler@gmail.com">bakminsterfuler@gmail.com</a><br>
-                📱 +380 63 505 8292<br>
-                🎨 <a href="https://astra31415926.github.io/" target="_blank">KASHKAROV RGB ART</a></p>
+        </div>
+
+        <div id="author" class="section">
+            <h2 data-ua="Автор" data-en="Author">Автор</h2>
+            <p><strong>Mykhailo Kashkarov</strong> (Михайло Кашкаров)</p>
+            <p data-ua="Художник та дослідник світла. Випускник Харківського художнього училища (1998) та Харківської академії дизайну і мистецтв (1999–2005). Авторська RGB-техніка світлочутливого живопису. Модель SCI розроблена на основі багаторічної практичної роботи з пігментами та подальшої математичної формалізації." data-en="Artist and researcher of light. Graduate of Kharkiv Art College (1998) and Kharkiv Academy of Design and Arts (1999–2005). Author of RGB light-sensitive painting technique. The SCI model was developed based on years of practical work with pigments and subsequent mathematical formalization.">Художник та дослідник світла. Випускник Харківського художнього училища (1998) та Харківської академії дизайну і мистецтв (1999–2005). Авторська RGB-техніка світлочутливого живопису. Модель SCI розроблена на основі багаторічної практичної роботи з пігментами та подальшої математичної формалізації.</p>
+        </div>
+
+        <div id="contacts" class="section">
+            <h2 data-ua="Контакти та проєкти" data-en="Contacts & Projects">Контакти та проєкти</h2>
+            <p>📞 <strong>+380 63 505 8292</strong><br>
+            ✉️ <a href="mailto:bakminsterfuler@gmail.com">bakminsterfuler@gmail.com</a></p>
+            
+            <div class="project-links">
+                <a href="https://astra31415926.github.io/" target="_blank" class="button button-outline">🎨 RGB Art Gallery</a>
+                <a href="https://astra31415926.github.io/QR.G.B.-ART/" target="_blank" class="button button-outline">📱 Spectrum QR</a>
+                <a href="https://astra31415926.github.io/QRnament2/" target="_blank" class="button button-outline">🌀 QRnament v3.5</a>
+                <a href="https://github.com/Astra31415926/spectral-color-model" target="_blank" class="button button-outline">💾 GitHub: spectral-color-model</a>
+            </div>
+            
+            <div class="citation">
+                <strong>BibTeX / Zenodo</strong><br>
+                @techreport{model_sci_2026,<br>
+                &nbsp;&nbsp;author = {Kashkarov, Mykhailo},<br>
+                &nbsp;&nbsp;title = {SCI Universal Model: Deterministic Spectral Response Normalization},<br>
+                &nbsp;&nbsp;year = {2026},<br>
+                &nbsp;&nbsp;doi = {10.5281/zenodo.19633526}<br>
+                }<br>
+                <a href="https://zenodo.org/records/19633526" target="_blank" style="margin-top: 0.5rem; display: inline-block;">→ Zenodo record</a>
             </div>
         </div>
-        
-        <p data-ua="Для співпраці, інтеграції моделі в промислові рішення або отримання технічної документації – будь ласка, зв'яжіться за вказаними контактами." data-en="For collaboration, integration of the model into industrial solutions, or obtaining technical documentation, please contact me using the information above."></p>
-    </section>
-</main>
+    </div>
+</div>
 
 <footer>
-    <p data-ua="© 2026 Mykhailo Kashkarov · SCI Universal Model · Детермінована спектральна нормалізація" data-en="© 2026 Mykhailo Kashkarov · SCI Universal Model · Deterministic Spectral Normalization"></p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem;" data-ua="Вільне поширення зі збереженням авторства. Запрошуються до співпраці дослідники та інженери." data-en="Free distribution with attribution. Researchers and engineers are invited to collaborate."></p>
+    <p data-ua="© 2026 Mykhailo Kashkarov · SCI Universal Model · Вільне розповсюдження зі збереженням авторства" data-en="© 2026 Mykhailo Kashkarov · SCI Universal Model · Free distribution with attribution">© 2026 Mykhailo Kashkarov · SCI Universal Model · Вільне розповсюдження зі збереженням авторства</p>
 </footer>
 
 <script>
-    // БАЗОВА ЛОКАЛІЗАЦІЯ
     (function() {
         const langBtns = document.querySelectorAll('.lang-btn');
-        let currentLang = 'ua'; // 'ua' or 'en'
+        let currentLang = 'ua';
         
         function setLanguage(lang) {
             currentLang = lang;
-            // update buttons active class
             langBtns.forEach(btn => {
                 if(btn.getAttribute('data-lang') === lang) {
                     btn.classList.add('active');
@@ -442,78 +407,31 @@
                 }
             });
             
-            // update all elements with data-ua and data-en
             document.querySelectorAll('[data-ua][data-en]').forEach(el => {
                 const text = el.getAttribute(`data-${lang}`);
-                if(text) {
-                    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.value = text;
-                    } else {
-                        el.innerText = text;
-                    }
+                if(text && el.tagName !== 'A') {
+                    el.innerText = text;
+                } else if(text && el.tagName === 'A') {
+                    // for links, keep href but change text if needed
                 }
             });
             
-            // special for placeholders or titles
-            document.querySelectorAll('[data-ua-title][data-en-title]').forEach(el => {
-                const titleText = el.getAttribute(`data-${lang}-title`);
-                if(titleText) el.setAttribute('title', titleText);
+            // Спеціальна обробка для елементів, які можуть містити HTML
+            document.querySelectorAll('[data-ua-html][data-en-html]').forEach(el => {
+                const html = el.getAttribute(`data-${lang}-html`);
+                if(html) el.innerHTML = html;
             });
-            
-            // update h2, h3 etc if needed
-            document.querySelectorAll('h2, h3, .card h4, .badge, .button').forEach(el => {
-                if(el.hasAttribute(`data-${lang}`)) {
-                    const newText = el.getAttribute(`data-${lang}`);
-                    if(newText && el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-                        el.innerText = newText;
-                    } else if(newText && el.tagName === 'BUTTON' && el.classList.contains('button')) {
-                        // keep inner maybe other nodes, but we simplify
-                    } else if(newText && (el.tagName === 'H2' || el.tagName === 'H3' || el.classList.contains('badge'))) {
-                        el.innerText = newText;
-                    }
-                }
-            });
-            
-            // special for buttons with complex content
-            document.querySelectorAll('.button').forEach(btn => {
-                if(btn.hasAttribute(`data-${lang}`) && !btn.querySelector('svg')) {
-                    const originalText = btn.getAttribute(`data-${lang}`);
-                    if(originalText && (btn.innerText.includes('Переглянути') || btn.innerText.includes('View') || btn.innerText.includes('Spectrum') || btn.innerText.includes('QRnament') || btn.innerText.includes('GitHub') || btn.innerText.includes('Zenodo'))) {
-                        btn.innerText = originalText;
-                    }
-                }
-            });
-            
-            // update footer if needed
-            const footerP = document.querySelector('footer p');
-            if(footerP) {
-                if(currentLang === 'ua') footerP.innerHTML = '© 2026 Mykhailo Kashkarov · SCI Universal Model · Детермінована спектральна нормалізація';
-                else footerP.innerHTML = '© 2026 Mykhailo Kashkarov · SCI Universal Model · Deterministic Spectral Normalization';
-            }
         }
         
         langBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const lang = btn.getAttribute('data-lang');
                 if(lang === 'ua') setLanguage('ua');
                 else if(lang === 'en') setLanguage('en');
             });
         });
         
-        // initialize
         setLanguage('ua');
-        
-        // scroll to section on nav click
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                const sectionId = link.getAttribute('data-section');
-                const section = document.getElementById(sectionId);
-                if(section) {
-                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
     })();
 </script>
 </body>
