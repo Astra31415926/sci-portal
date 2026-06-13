@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Універсальна модель SCI: детермінована нормалізація спектрального відгуку</title>
-    <!-- Підключаємо Tailwind CSS для стилів -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Підключаємо MathJax для ідеального відображення математичних формул -->
     <script>
         window.MathJax = {
             tex: {
@@ -38,7 +36,6 @@
 </head>
 <body class="min-h-screen bg-neutral-950 text-neutral-100 font-sans selection:bg-indigo-500 selection:text-white antialiased">
 
-    <!-- НАВІГАЦІЯ -->
     <header class="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
           <div>
@@ -57,18 +54,16 @@
 
     <main class="max-w-4xl mx-auto px-6 py-12 space-y-20">
         
-        <!-- ТИТУЛ -->
         <section class="space-y-6 text-center md:text-left">
           <span class="font-mono text-xs text-indigo-400 uppercase tracking-widest block">Науково-прикладна концепція</span>
           <h1 class="text-2xl md:text-4xl font-black tracking-tight text-neutral-100 leading-tight">
             Універсальна модель SCI (Spectral Channel Integrity): детермінована нормалізація спектрального відгуку
           </h1>
           <p class="text-sm md:text-base text-neutral-400 max-w-3xl leading-relaxed">
-            Фундаментальний алгоритм спектральної гомогенізації середовищ для комп'ютерного зору, стеганографії та високоточного відтворення кольору.
+            Фундаментальний алгоритм спектральної гомогенізації середовищ для комп'юकरного зору, стеганографії та високоточного відтворення кольору.
           </p>
         </section>
 
-        <!-- ЦЕНТРАЛЬНИЙ КРЕСЛЕННЯ -->
         <section class="border border-neutral-900 bg-neutral-900/20 rounded-2xl p-2 overflow-hidden">
           <img 
             src="main_sci_rss_blueprint.png" 
@@ -81,7 +76,6 @@
           </div>
         </section>
 
-        <!-- РОЗДІЛ 1: CROSSTALK -->
         <section id="theory" class="space-y-4 scroll-mt-24">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">1. Фізична природа crosstalk</h2>
           <div class="grid md:grid-cols-2 gap-8 items-start">
@@ -116,13 +110,12 @@
             </button>
             <div id="crosstalk-block" class="hidden-content mt-4 p-5 bg-neutral-900/40 border border-neutral-900 rounded-xl text-xs font-mono text-neutral-400 space-y-3 leading-relaxed">
                 <p>У стандартних CMYK-системах жовтий пігмент зазвичай найближчий до ідеальної спектральної характеристики, тоді як ціан і маджента демонструють більш вузький робочий діапазон і вищий рівень міжканальної інтерференції.</p>
-                <p>На рисунку 2 показано цей ефект. У системі RGB (A) канали є незалежними та можуть бути повністю розділені. Після відтворення того самого зображення на субтрактивного носії стандартними методами (B) виникає міжканальне перекриття, через яке під час спектральної сепарації кожен канал містить <strong>інтерференційні компоненти</strong> інших каналів.</p>
+                <p>На рисунку 2 показано цей ефект. У системі RGB (A) канали є незалежними та можуть быть повністю розділені. Після відтворення того самого зображення на субтрактивного носії стандартними методами (B) виникає міжканальне перекриття, через яке під час спектральної сепарації кожен канал містить <strong>інтерференційні компоненти</strong> інших каналів.</p>
                 <p>Після застосування нормалізації SCI (C) амплітудний дисбаланс і базові рівні вирівнюються, що суттєво зменшує crosstalk і <strong class="text-neutral-200">відновлює операційну незалежність каналів</strong>.</p>
             </div>
           </div>
         </section>
 
-        <!-- РОЗДІЛ 2: СУТЬ МОДЕЛІ -->
         <section id="solution" class="space-y-4 scroll-mt-24 border-t border-neutral-900 pt-12">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">2. Суть моделі SCI: спектральне вирівнювання через лімітування</h2>
           <div class="grid md:grid-cols-2 gap-8 items-start">
@@ -170,14 +163,13 @@
           </div>
         </section>
 
-        <!-- РОЗДІЛ 3: ЗВОРOТНІСТЬ -->
         <section id="reversibility" class="space-y-4 scroll-mt-24 border-t border-neutral-900 pt-12">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">3. Зворотність процесу: цифрова регенерація</h2>
           <p class="text-neutral-400 text-sm leading-relaxed max-w-3xl">
             Оскільки модель SCI зберігає строгі пропорції спектральних каналів на фізичному носії без нелінійних викривлень, процес взаємодії між цифрою та аналогом стає математично оборотним. Фізичний відбиток може бути повторно оцифрований за допомогою систем комп'ютерного зору, після чого в цифровому середовищі зображення повертається до своїх вихідних RGB-характеристик без втрати інформаційної структури сигналу.
           </p>
           <p class="text-sm text-neutral-300 font-semibold">
-            Ключовий наслісок: Математична оборотність відкриває можливість для побудови надійних систем комп'ютерного зору та прихованого кодування, які безпомилково працюють на реальних фізичних об'єктах, а не тільки всередині екранних зображень.
+            Ключовий наслідок: Математична оборотність відкриває можливість для побудови надійних систем комп'ютерного зору та прихованого кодування, які безпомилково працюють на реальних фізичних об'єктах, а не тільки всередині екранних зображень.
           </p>
 
           <div class="pt-2">
@@ -194,7 +186,7 @@
               </div>
               <div>
                 <h4 class="text-neutral-200 font-bold mb-1">Крок 2. Оцифрування без втрат</h4>
-                <p class="leading-relaxed">Фізичний відбиток може бути повторно оцифрований — сканований побутовим сканером або сфотографований камерою (системою комп'ютерного зору). Оскільки спектральний шум відсутній, отримане цифрове зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл до друку.</p>
+                <p class="leading-relaxed">Фізичний відбиток може бути повторно оцифрований — сканований побутовим сканером або сфотограхований камерою (системою комп'ютерного зору). Оскільки спектральний шум відсутній, отримане цифрове зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл до друку.</p>
               </div>
               <div>
                 <h4 class="text-neutral-200 font-bold mb-1">Крок 3. Лінійне нормування</h4>
@@ -208,7 +200,6 @@
           </div>
         </section>
 
-        <!-- РОЗДІЛ 4: ЕКОСИСТЕМА -->
         <section id="ecosystem" class="space-y-6 scroll-mt-24 border-t border-neutral-900 pt-12">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">4. Прикладне значення та діючі компоненти екосистеми</h2>
           <div class="text-neutral-400 text-sm space-y-4 leading-relaxed max-w-3xl">
@@ -220,12 +211,11 @@
             </p>
           </div>
 
-          <!-- ЦИФРОВІ ГЕНЕРАТОРИ -->
           <div class="grid md:grid-cols-2 gap-6 pt-4">
             <div class="bg-neutral-900/30 border border-neutral-900 rounded-2xl p-5 flex flex-col justify-between space-y-4">
               <div class="space-y-3">
                 <div class="w-full h-52 flex items-center justify-center bg-neutral-900/40 rounded-xl overflow-hidden p-2">
-                  <img src="steganography_rgb_qrcode.jpg" alt="Spectrum QR Code" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
+                  <img src="01.jpg" alt="Spectrum QR Code" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
                 </div>
                 <h3 class="font-bold text-base text-neutral-200">Spectrum QR</h3>
                 <p class="text-xs text-neutral-400 leading-relaxed">
@@ -243,7 +233,7 @@
             <div class="bg-neutral-900/30 border border-neutral-900 rounded-2xl p-5 flex flex-col justify-between space-y-4">
               <div class="space-y-3">
                 <div class="w-full h-52 flex items-center justify-center bg-neutral-900/40 rounded-xl overflow-hidden p-2">
-                  <img src="ornamental_rgb_mandala.png" alt="QRnament / Mandala" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
+                  <img src="0002.png" alt="QRnament / Mandala" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
                 </div>
                 <h3 class="font-bold text-base text-neutral-200">QRnament v3.5</h3>
                 <p class="text-xs text-neutral-400 leading-relaxed">
@@ -263,13 +253,12 @@
             <strong class="text-neutral-400">Важливе зауваження:</strong> Наразі обидва генератори працюють лише в цифровому середовищі. Вони створюють коди, що ідеально зчитуються з екрану монітора, але не виконують SCI-балансування кольорів. Розробка програмного модуля, який автоматично застосовуватиме балансування до згенерованих кодів, триває.
           </p>
 
-          <!-- ДЕТАЛЬНІШЕ: ФІЗИЧНЕ ПІДТВЕРДЖЕННЯ -->
           <div class="pt-2">
             <button 
               onclick="toggleSection('ecosystem-block', this)"
               class="text-xs font-mono text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1"
             >
-              <span>+ Физичне підтвердження концепції</span>
+              <span>+ Фізичне підтвердження концепції</span>
             </button>
             <div id="ecosystem-block" class="hidden-content mt-4 p-5 bg-neutral-900/40 border border-neutral-900 rounded-xl space-y-4">
               <div class="grid md:grid-cols-2 gap-4">
@@ -289,7 +278,6 @@
           </div>
         </section>
 
-        <!-- РОЗДІЛ 5: ПРОГРАМНЕ ЗАБЕЗПЕЧЕННЯ -->
         <section id="software" class="space-y-6 scroll-mt-24 border-t border-neutral-900 pt-12">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">5. Проєктна архітектура ПЗ: автоматизація калібрування та віртуалізація друку</h2>
           <p class="text-neutral-400 text-sm leading-relaxed max-w-3xl">
@@ -338,16 +326,14 @@
           </div>
         </section>
 
-        <!-- РОЗДІЛ 6: АВТОР -->
         <section id="author" class="space-y-6 scroll-mt-24 border-t border-neutral-900 pt-12">
           <h2 class="text-xl font-bold tracking-tight text-neutral-200">6. Про автора</h2>
           <div class="bg-neutral-900/20 border border-neutral-900 rounded-2xl p-6 grid md:grid-cols-3 gap-6 items-center">
             
-            <!-- Блок з фото автора -->
             <div class="flex justify-center md:col-span-1">
               <div class="w-44 h-44 bg-neutral-900/50 border border-neutral-800 rounded-xl overflow-hidden p-2 flex items-center justify-center">
                 <img 
-                  src="ornamental_rgb_mandala.png" 
+                  src="0003.jpg" 
                   alt="Михайло Кашкаров - Автор моделі SCI" 
                   class="max-w-full max-h-full object-contain rounded-lg clickable-img"
                   onclick="openModal(this.src, this.alt)"
@@ -355,7 +341,6 @@
               </div>
             </div>
 
-            <!-- Блок з текстом біографії -->
             <div class="md:col-span-2 space-y-4 flex flex-col justify-between h-full">
               <div class="space-y-2">
                 <h3 class="text-lg font-bold text-neutral-100">Михайло Кашкаров</h3>
@@ -376,7 +361,6 @@
           </div>
         </section>
 
-        <!-- ПУБЛІКАЦІЇ ТА РЕПОЗИТОРІЇ -->
         <section class="border-t border-neutral-900 pt-12 grid md:grid-cols-2 gap-8 font-mono text-xs">
           <div class="space-y-4">
             <h3 class="font-bold text-sm text-neutral-300">Контакти</h3>
@@ -411,7 +395,6 @@
         &copy; 2026 Mykhailo Kashkarov · SCI Universal Model · Вільне розповсюдження зі збереженням авторства.
       </footer>
 
-    <!-- МОДАЛЬНЕ ВІКНО ДЛЯ ПЕРЕГЛЯДУ ЗОБРАЖЕНЬ НА ВЕСЬ ЕКРАН -->
     <div 
         id="image-modal" 
         class="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-[100] hidden opacity-0 flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
@@ -423,7 +406,6 @@
         </div>
     </div>
 
-    <!-- СКРИПТИ -->
     <script>
         // Розгортання прихованих блоків
         function toggleSection(id, button) {
