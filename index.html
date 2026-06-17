@@ -1,365 +1,421 @@
 <!DOCTYPE html>
-<html lang="uk" class="dark scroll-smooth">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCI Universal Model · Spectral Channel Integrity</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..0,800;1,300..1,800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <title>Універсальна модель SCI: детермінована нормалізація спектрального відгуку</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
                 displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            svg: { fontCache: 'global' }
+            }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/input/tev/../ts/bootstrap/../../../../mathjax/3.2.2/es5/tex-svg.js"></script>
-    
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .font-mono {
-            font-family: 'Space Grotesk', monospace;
-        }
-        .hidden-content {
-            display: none;
-        }
-        .clickable-img {
-            cursor: zoom-in;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .clickable-img:hover {
-            transform: scale(1.015);
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
-        }
+        html { scroll-behavior: smooth; }
+        .hidden-content { display: none; }
+        #image-modal { transition: opacity 0.25s ease-in-out; }
+        .clickable-img { cursor: zoom-in; transition: transform 0.2s ease; }
+        .clickable-img:hover { transform: scale(1.015); }
     </style>
 </head>
-<body class="min-h-screen font-sans selection:bg-indigo-500 selection:text-white antialiased text-base md:text-lg transition-colors duration-300 bg-neutral-950 text-neutral-100">
+<body class="min-h-screen bg-neutral-950 text-neutral-100 font-sans selection:bg-indigo-500 selection:text-white antialiased text-base md:text-lg transition-colors duration-300 dark:bg-neutral-950 dark:text-neutral-100 bg-white text-neutral-900">
 
-    <header class="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <span class="font-mono font-bold tracking-wider text-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">SCI.MODEL</span>
-                <span data-translate="badge" class="hidden sm:inline-block text-[10px] font-mono uppercase tracking-widest bg-neutral-100 dark:bg-neutral-900 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 text-neutral-500">Науково-прикладна концепція</span>
+    <header class="border-b border-neutral-200 bg-white/80 dark:border-neutral-900 dark:bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div class="flex items-center justify-between w-full sm:w-auto gap-4">
+            <span class="font-mono text-sm tracking-widest text-neutral-500 dark:text-neutral-400">SCI.MODEL.2026</span>
+            <div class="flex items-center gap-2 sm:hidden">
+              <div class="flex bg-neutral-100 dark:bg-neutral-900 p-0.5 rounded-xl border border-neutral-200 dark:border-neutral-800 font-mono text-xs">
+                <button onclick="setLanguage('uk')" id="lang-uk-mobile" class="px-2.5 py-1 rounded-lg font-bold transition-all bg-indigo-600 text-white">UK</button>
+                <button onclick="setLanguage('en')" id="lang-en-mobile" class="px-2.5 py-1 rounded-lg font-bold transition-all text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white">EN</button>
+              </div>
+              <button onclick="toggleTheme()" class="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-base shadow-sm hover:scale-105 active:scale-95 transition-transform" id="theme-btn-mobile">🌙</button>
             </div>
-            
-            <nav class="hidden lg:flex items-center gap-6 font-mono text-xs uppercase tracking-wider">
-                <a href="#crosstalk" data-translate="nav-1" class="text-neutral-400 hover:text-indigo-400 transition-colors">1. Природа Crosstalk</a>
-                <a href="#essence" data-translate="nav-2" class="text-neutral-400 hover:text-indigo-400 transition-colors">2. Суть моделі</a>
-                <a href="#reversibility" data-translate="nav-3" class="text-neutral-400 hover:text-indigo-400 transition-colors">3. Оборотність</a>
-                <a href="#ecosystem" data-translate="nav-4" class="text-neutral-400 hover:text-indigo-400 transition-colors">4. Екосистема</a>
-                <a href="#software" data-translate="nav-5" class="text-neutral-400 hover:text-indigo-400 transition-colors">5. Майбутнє проєкту</a>
-                <a href="#author" data-translate="nav-6" class="text-neutral-400 hover:text-indigo-400 transition-colors">6. Автор</a>
-            </nav>
+          </div>
+          
+          <nav class="hidden md:flex gap-6 font-mono text-sm text-neutral-600 dark:text-neutral-400">
+            <a href="#theory" data-translate="nav-1" class="hover:text-indigo-600 dark:hover:text-white transition-colors">1. Природа Crosstalk</a>
+            <a href="#solution" data-translate="nav-2" class="hover:text-indigo-600 dark:hover:text-white transition-colors">2. Суть моделі</a>
+            <a href="#reversibility" data-translate="nav-3" class="hover:text-indigo-600 dark:hover:text-white transition-colors">3. Зворотність</a>
+            <a href="#ecosystem" data-translate="nav-4" class="hover:text-indigo-600 dark:hover:text-white transition-colors">4. Екосистема</a>
+            <a href="#software" data-translate="nav-5" class="hover:text-indigo-600 dark:hover:text-white transition-colors">5. Розробка ПЗ</a>
+            <a href="#author" data-translate="nav-6" class="hover:text-indigo-600 dark:hover:text-white transition-colors">6. Автор</a>
+          </nav>
 
-            <div class="flex items-center gap-2">
-                <div class="hidden sm:flex border border-neutral-200 dark:border-neutral-800 p-0.5 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 font-mono text-xs">
-                    <button id="lang-uk" onclick="setLanguage('uk')" class="px-2.5 py-1 rounded-md font-bold transition-all bg-indigo-600 text-white">UA</button>
-                    <button id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md font-bold transition-all">EN</button>
-                </div>
-                <button id="theme-btn" onclick="toggleTheme()" class="p-2 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors text-sm">☀️</button>
+          <div class="hidden sm:flex items-center gap-3">
+            <div class="flex bg-neutral-100 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-200 dark:border-neutral-800 font-mono text-xs">
+              <button onclick="setLanguage('uk')" id="lang-uk" class="px-3 py-1.5 rounded-lg font-bold transition-all bg-indigo-600 text-white">UK</button>
+              <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1.5 rounded-lg font-bold transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white">EN</button>
             </div>
-        </div>
-        
-        <div class="sm:hidden border-t border-neutral-200 dark:border-neutral-900 px-4 py-2 flex justify-between items-center bg-neutral-50/50 dark:bg-neutral-950/50">
-            <div class="border border-neutral-200 dark:border-neutral-800 p-0.5 rounded-lg bg-white dark:bg-neutral-900 font-mono text-[11px] flex">
-                <button id="lang-uk-mobile" onclick="setLanguage('uk')" class="px-2 py-0.5 rounded-md transition-all bg-indigo-600 text-white">UA</button>
-                <button id="lang-en-mobile" onclick="setLanguage('en')" class="px-2 py-0.5 rounded-md transition-all">EN</button>
-            </div>
-            <button id="theme-btn-mobile" onclick="toggleTheme()" class="hidden text-xs">☀️</button>
+            <button onclick="toggleTheme()" class="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-lg shadow-sm hover:scale-105 active:scale-95 transition-transform" id="theme-btn">🌙</button>
+          </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-24 md:space-y-36">
+    <main class="max-w-4xl mx-auto px-6 py-12 space-y-20">
         
-        <section class="space-y-6 max-w-4xl">
-            <h1 data-translate="main-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-neutral-900 to-neutral-600 dark:from-white dark:to-neutral-400 bg-clip-text text-transparent leading-[1.15] md:leading-[1.1]">
-                Універсальна модель SCI (Spectral Channel Integrity)
-            </h1>
-            <p data-translate="main-desc" class="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 font-light leading-relaxed">
-                Алгоритм спектральної гомогенізації середовищ для комп'ютерного зору, стеганографії та високоточного відтворення кольору.
-            </p>
+        <section class="space-y-6 text-center md:text-left">
+          <span data-translate="badge" class="font-mono text-sm text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block">Науково-приклачна концепція</span>
+          <h1 data-translate="main-title" class="text-3xl md:text-5xl font-black tracking-tight text-neutral-900 dark:text-neutral-100 leading-tight">
+            Універсальна модель SCI (Spectral Channel Integrity): детермінована нормалізація спектрального відгуку
+          </h1>
+          <p data-translate="main-desc" class="text-base md:text-lg text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+            Фундаментальний алгоритм спектральної гомогенізації середовищ для комп'ютерного зору, стеганографії та високоточного відтворення кольору.
+          </p>
         </section>
 
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-4 space-y-3 shadow-sm flex flex-col justify-between">
-                <div class="w-full h-48 md:h-56 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-xl overflow-hidden p-2 border border-neutral-100 dark:border-neutral-900">
-                    <img src="01.png" alt="Reference Violet Anchor System" class="max-w-full max-h-full object-contain roundedclickable-img" onclick="openModal(this.src, this.alt)">
-                </div>
-                <p data-translate="fig-1" class="text-xs font-mono text-neutral-500 dark:text-neutral-500 leading-normal">
-                    Fig 1: Замкнута система спектральних констант та фіолетовий якір балансування (Reference Violet Anchor).
-                </p>
-            </div>
-            
-            <div class="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-4 space-y-3 shadow-sm flex flex-col justify-between">
-                <div class="w-full h-48 md:h-56 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-xl overflow-hidden p-2 border border-neutral-100 dark:border-neutral-900">
-                    <img src="0002.png" alt="Crosstalk vs Linearized Response Profiles" class="max-w-full max-h-full object-contain rounded clickable-img" onclick="openModal(this.src, this.alt)">
-                </div>
-                <p data-translate="fig-2" class="text-xs font-mono text-neutral-500 dark:text-neutral-500 leading-normal">
-                    Fig 2: Порівняльний аналіз каналів: ідеальне розділення (А), міжканальне перекриття (В), лінеаризований відгук SCI (С).
-                </p>
-            </div>
-
-            <div class="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-4 space-y-3 shadow-sm flex flex-col justify-between">
-                <div class="w-full h-48 md:h-56 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-xl overflow-hidden p-2 border border-neutral-100 dark:border-neutral-900">
-                    <img src="0003.png" alt="Spectral Scaling Constraints Mapping" class="max-w-full max-h-full object-contain rounded clickable-img" onclick="openModal(this.src, this.alt)">
-                </div>
-                <p data-translate="fig-3" class="text-xs font-mono text-neutral-500 dark:text-neutral-500 leading-normal">
-                    Fig 3: Процес спектрального масштабування (Spectral Scaling) та приведення кривих до спільних меж Uref та Lref.
-                </p>
-            </div>
+        <section class="border border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/20 rounded-2xl p-2 overflow-hidden">
+          <img 
+            src="main_sci_rss_blueprint.png" 
+            alt="SCI Universal Model Matrix Blueprint" 
+            class="w-full h-auto rounded-xl clickable-img"
+            onclick="openModal(this.src, this.alt)"
+          />
+          <div data-translate="fig-1" class="p-4 text-center font-mono text-xs text-neutral-500">
+            Fig 1: Замкнута система спектральних констант та фіолетовий якір балансування (Reference Violet Anchor).
+          </div>
         </section>
 
-        <section id="crosstalk" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="t-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">Суть проблеми та фізична природа crosstalk</h2>
-            <div data-translate="t-body" class="text-neutral-600 dark:text-neutral-400 text-base md:text-lg space-y-4 leading-relaxed max-w-3xl">
-                </div>
-            
-            <div class="pt-2">
-                <button onclick="toggleSection('crosstalk-block', this)" class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1">
-                    <span data-translate="more">+ Детальніше</span>
-                </button>
-                <div id="crosstalk-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-4 max-w-3xl leading-relaxed">
-                    </div>
+        <section id="theory" class="space-y-4 scroll-mt-24">
+          <h2 data-translate="t-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">1. Фізична природа crosstalk</h2>
+          <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div data-translate="t-body" class="text-neutral-600 dark:text-neutral-400 text-base space-y-4 leading-relaxed">
+              <p>
+                Субтрактивна модель кольороутворення (CMYK) не є фізично симетричною до адитивної моделі (RGB). В адитивних системах кожен канал може існувати незалежно, тоді як реальні пігменти мають широкі спектри поглинання та відбиття, що неминуче призводить до міжканального впливу.
+              </p>
+              <p>
+                Основною причиною crosstalk є спектральна неідеальність пігментів. Жоден друкарський барвник не здатний повністю поглинати цільову ділянку спектра і одночасно повністю відбивати інші ділянки. Крім того, різні пігменти мають неоднакові динамічні діапазони та різний ступінь спектрального перекриття.
+              </p>
+              <p class="text-neutral-900 dark:text-neutral-300">
+                <strong>Наслідок:</strong> У результаті інформація, записана в одному каналі, частково проявляється в інших каналах. Це порушує їхню незалежність і унеможливлює точне відтворення пропорцій сигналу під час перенесення багатоканальних даних із адитивного середовища на субтрактивний носій.
+              </p>
             </div>
+            <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-xl p-2">
+              <img 
+                src="spectral_channels_crosstalk_comparison.png" 
+                alt="Spectral Channels Crosstalk Comparison" 
+                class="w-full h-auto rounded-lg clickable-img" 
+                onclick="openModal(this.src, this.alt)"
+              />
+              <p data-translate="fig-2" class="text-xs font-mono text-neutral-500 p-2 text-center">Fig 2: Порівняльний аналіз каналів: ідеальне розділення (А), міжканальне перекриття (В), лінеаризований відгук SCI (С).</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button 
+              onclick="toggleSection('crosstalk-block', this)"
+              class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1"
+            >
+              <span data-translate="more">+ Детальніше</span>
+            </button>
+            <div id="crosstalk-block" data-translate="t-more" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-3 leading-relaxed">
+                <p>У стандартних CMYK-системах жовтий пігмент зазвичай найближчий до ідеальної спектральної характеристики, тоді як ціан і маджента демонструють більш вузький робочий діапазон і вищий рівень міжканальної інтерференції.</p>
+                <p>На рисунку 2 показано цей ефект. У системі RGB (A) канали є незалежними та можуть бути повністю розділені. Після відтворення того самого зображення на субтрактивному носії стандартними методами (B) виникає міжканальне перекриття, через яке під час спектральної сепарації кожен канал містить <strong>інтерференційні компоненти</strong> інших каналів.</p>
+                <p>Після застосування normalization SCI (C) амплітудний дисбаланс і базові рівні вирівнюються, що суттєво зменшує crosstalk і <strong class="text-neutral-800 dark:text-neutral-200">відновлює операційну незалежність каналів</strong>.</p>
+            </div>
+          </div>
         </section>
 
-        <section id="essence" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="s-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">Запропоноване рішення та суть моделі SCI</h2>
-            <div data-translate="s-body" class="text-neutral-600 dark:text-neutral-400 text-base md:text-lg space-y-4 leading-relaxed max-w-3xl">
-                </div>
-
-            <div class="my-8 p-6 md:p-8 bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-2xl max-w-3xl flex flex-col items-center justify-center shadow-inner relative overflow-hidden group">
-                <div class="absolute inset-0 w-1.5 bg-gradient-to-b from-indigo-500 to-purple-600"></div>
-                <div class="w-full text-left mb-4">
-                    <span data-translate="s-more-1" class="text-xs font-mono uppercase tracking-wider text-neutral-400 block">Математична основа:</span>
-                </div>
-                <div class="py-4 text-xl md:text-2xl font-mono text-neutral-800 dark:text-neutral-200 select-all overflow-x-auto max-w-full">
-                    $$X_{new} = \frac{X - X_{min}}{X_{max} - X_{min}}$$
-                </div>
-                <div class="w-full text-left mt-2">
-                    <span data-translate="s-more-3" class="text-xs font-mono text-neutral-500 leading-relaxed block">Де $X_{min}$ і $X_{max}$ — межі найслабшого каналу, які визначають єдині опорні межі системи.</span>
-                </div>
+        <section id="solution" class="space-y-4 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
+          <h2 data-translate="s-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">2. Суть моделі SCI: спектральне вирівнювання через лімітування</h2>
+          <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div data-translate="s-body" class="text-neutral-600 dark:text-neutral-400 text-base space-y-4 leading-relaxed">
+              <p>
+                SCI приводить спектральні характеристики пігментів до спільних опорних меж, формуючи узгоджене середовище, у якому стає можливим детерміноване розділення інформаційних каналів.
+              </p>
+              <p class="text-neutral-900 dark:text-neutral-300 font-semibold">Принцип спектрального лімітування:</p>
+              <p>
+                У реальних субтрактивних системах різні пігменти мають неоднакові амплітуди відбиття та різний динамічний діапазон. SCI використовує найслабший компонент системи як спектральний еталон і масштабує характеристики інших каналів відносно цього обмеження. У результаті всі канали отримують єдині верхній ($U_{ref}$) і нижній ($L_{ref}$) опорні рівні.
+              </p>
+              <p>
+                <strong>Результат нормалізації:</strong> Після масштабування система втрачає частину візуальної яскравості та контрастності, проте набуває значно важливішої властивості — спектральної узгодженості. Амплітудний дисбаланс між пігментами усувається, а відносні співвідношення між каналами стають стабільними та відтворюваними.
+              </p>
+              <p class="italic border-l-2 border-indigo-500/50 pl-3 text-neutral-600 dark:text-neutral-400">
+                На відміну від традиційної поліграфії, де пріоритетом є максимальна візуальна насиченість кольорів, модель SCI віддає пріоритет спектральній точності та збереженню інформаційної структури сигналу.
+              </p>
             </div>
+            <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-xl p-2">
+              <img 
+                src="sci_spectral_scaling_blueprint.png" 
+                alt="Spectral Scaling Graphs" 
+                class="w-full h-auto rounded-lg clickable-img" 
+                onclick="openModal(this.src, this.alt)"
+              />
+              <p data-translate="fig-3" class="text-xs font-mono text-neutral-500 p-2 text-center">Fig 3: Процес спектрального масштабування (Spectral Scaling) та приведення кривих до спільних меж $U_{ref}$ та $L_{ref}$.</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button 
+              onclick="toggleSection('solution-block', this)"
+              class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1"
+            >
+              <span data-translate="more">+ Детальніше</span>
+            </button>
+            <div id="solution-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-3 leading-relaxed">
+                <p data-translate="s-more-1"><strong>Спектральне масштабування:</strong> На рисунку 3 показано цей ефект. Ліворуч наведено вихідні спектральні характеристики пігментів із різними амплітудами та базовими рівнями. Праворуч — ті самі криві після застосування SCI, де всі канали приведені до спільних меж $U_{ref}$ та $L_{ref}$.</p>
+                <p data-translate="s-more-2"><strong>Математична формалізація:</strong> Нормалізація виконується відповідно до виразу:</p>
+                <div class="text-center py-3 text-neutral-900 dark:text-neutral-200 text-base tracking-wide">
+                    $$I_{norm}^c(\lambda) = \frac{I_{scaled}^c(\lambda) - L_{ref}}{U_{ref} - L_{ref}}$$
+                </div>
+                <p data-translate="s-more-3">де $U_{ref}$ та $L_{ref}$ визначають єдині опорні межі системи. Таке перетворення дозволяє зафіксувати спектральні константи середовища та забезпечити відтворюваність відносних характеристик каналів незалежно від варіацій їхніх початкових амплітуд.</p>
+            </div>
+          </div>
         </section>
 
-        <section id="reversibility" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="r-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">3. Математична оборотність</h2>
-            <div class="max-w-3xl space-y-4">
-                <p data-translate="r-body" class="text-neutral-600 dark:text-neutral-400 text-base md:text-lg leading-relaxed">
-                    </p>
-                <div class="p-4 bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100 dark:border-indigo-950/40 rounded-xl">
-                    <p data-translate="r-accent" class="text-sm md:text-base font-mono text-indigo-700 dark:text-indigo-400 leading-relaxed">
-                        </p>
-                </div>
-            </div>
+        <section id="reversibility" class="space-y-4 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
+          <h2 data-translate="r-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">3. Зворотність процесу: цифрова регенерація</h2>
+          <p data-translate="r-body" class="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed max-w-3xl">
+            Оскільки модель SCI зберігає строгі пропорції спектральних каналів на фізичному носії без нелінійних викривлень, процес взаємодії між цифрою та аналогом стає математично оборотним. Фізичний відбиток може бути повторно оцифрований за допомогою систем комп'ютерного зору, після чого в цифровому середовищі зображення повертається до своїх вихідних RGB-характеристик без втрати інформаційної структури сигналу.
+          </p>
+          <p data-translate="r-accent" class="text-base md:text-lg text-neutral-800 dark:text-neutral-300 font-semibold">
+            Ключовий наслідок: Математична оборотність відкриває можливість для побудови надійних систем комп'ютерного зору та прихованого кодування, які безпомилково працюють на реальних фізичних об'єктах, а не тільки всередині екранних зображень.
+          </p>
 
-            <div class="pt-2">
-                <button onclick="toggleSection('reversibility-steps', this)" class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1">
-                    <span data-translate="more-steps">+ Детальніше (Чотири кроки повного циклу)</span>
-                </button>
-                <div id="reversibility-steps" class="hidden-content mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl">
-                    <div class="border border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/20 p-5 rounded-xl flex flex-col justify-between space-y-4 font-mono text-xs">
-                        <div>
-                            <h4 data-translate="step-1-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 1. Фіксація стану</h4>
-                            <p data-translate="step-1-b" class="leading-relaxed text-neutral-500 dark:text-neutral-400">Збереження пропорцій спектральних каналів на фізичному носії (папір, полотно, пластик). Співвідношення енергії між червоним, зеленим та синім каналами залишається незмінним.</p>
-                        </div>
-                    </div>
-                    <div class="border border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/20 p-5 rounded-xl flex flex-col justify-between space-y-4 font-mono text-xs">
-                        <div>
-                            <h4 data-translate="step-2-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 2. Оцифрування без втрат</h4>
-                            <p data-translate="step-2-b" class="leading-relaxed text-neutral-500 dark:text-neutral-400">Фізичний відбиток повторно оцифровується камерою або сканером. Отримане數位 зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл.</p>
-                        </div>
-                    </div>
-                    <div class="border border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/20 p-5 rounded-xl flex flex-col justify-between space-y-4 font-mono text-xs">
-                        <div>
-                            <h4 data-translate="step-3-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 3. Лінійне нормування</h4>
-                            <p data-translate="step-3-b" class="leading-relaxed text-neutral-500 dark:text-neutral-400">Застосовується просте лінійне нормування контрасту (розтягнення динамічного діапазону від мінімального до максимального значення) без ICC-профілів.</p>
-                        </div>
-                    </div>
-                    <div class="border border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/20 p-5 rounded-xl flex flex-col justify-between space-y-4 font-mono text-xs">
-                        <div>
-                            <h4 data-translate="step-4-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 4. Повна регенерація</h4>
-                            <p data-translate="step-4-b" class="leading-relaxed text-neutral-500 dark:text-neutral-400">Результатом є зображення, ідентичне вихідним RGB-характеристикам. Кольорова інформація відновлюється без втрати структури сигналу.</p>
-                        </div>
-                    </div>
-                </div>
+          <div class="pt-2">
+            <button 
+              onclick="toggleSection('reversibility-block', this)"
+              class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1"
+            >
+              <span data-translate="more-steps">+ Детальніше (Чотири кроки повного циклу)</span>
+            </button>
+            <div id="reversibility-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-4">
+              <div>
+                <h4 data-translate="step-1-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 1. Фіксація стану</h4>
+                <p data-translate="step-1-b" class="leading-relaxed">Модель SCI забезпечує збереження пропорцій спектральних каналів на фізичному носії (папір, полотно, пластик). Це означає, що співвідношення енергії між червоним, зеленим та синім каналами залишається незмінним — на відміну від класичного друку, де crosstalk спотворює ці пропорції непередбачувано.</p>
+              </div>
+              <div>
+                <h4 data-translate="step-2-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 2. Оцифрування без втрат</h4>
+                <p data-translate="step-2-b" class="leading-relaxed">Физичний відбиток може бути повторно оцифрований — сканований побутовим сканером або сфотограхований камерою (системою комп'ютерного зору). Оскільки спектральний шум відсутній, отримане цифрове зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл до друку.</p>
+              </div>
+              <div>
+                <h4 data-translate="step-3-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 3. Лінійне нормування</h4>
+                <p class="leading-relaxed" data-translate="step-3-b">У цифровому середовищі застосовується просте лінійне нормування контрасту (розтягнення динамічного діапазону від мінімального до максимального значення). Жодної нелінійної корекції, жодних ICC-профілів, жодних «підборів на око».</p>
+              </div>
+              <div>
+                <h4 data-translate="step-4-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">Крок 4. Повна регенерація</h4>
+                <p class="leading-relaxed" data-translate="step-4-b">Результатом є зображення, ідентичне вихідним RGB-характеристикам, які були закладені в цифровий файл до друку. Кольорова інформація відновлюється без найменшої втрати — з точністю, яку дозволяє роздільна здатність сенсора.</p>
+              </div>
             </div>
+          </div>
         </section>
 
         <section id="ecosystem" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="e-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">4. Прикладне значення та діючі компоненти екосистеми</h2>
-            <div data-translate="e-body" class="text-neutral-600 dark:text-neutral-400 text-base space-y-4 leading-relaxed max-w-3xl">
-                </div>
-
-            <div class="grid md:grid-cols-2 gap-6 pt-4">
-                <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm">
-                    <div class="space-y-3">
-                        <div class="w-full h-52 flex items-center justify-center bg-neutral-100 dark:bg-neutral-900/40 rounded-xl overflow-hidden p-2">
-                            <img src="01.png" alt="Spectrum QR Code Generator Interface" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
-                        </div>
-                        <h3 class="font-bold text-lg text-neutral-800 dark:text-neutral-200">Spectrum QR</h3>
-                        <p id="p-g1-desc" data-translate="g1-desc" class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                            Генератор та сканер багатошарових кольорових QR-кодів (Spectrum QR). Інформація кодується одночасно в червоному, зеленому та синьому каналах.
-                        </p>
-                    </div>
-                    <a href="https://astra31415926.github.io/QR.G.B.-ART/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-6 py-3.5 text-base font-mono font-bold tracking-wider uppercase bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl shadow-md hover:shadow-xl hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-200 text-center">
-                        Spectrum QR →
-                    </a>
-                </div>
-
-                <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm">
-                    <div class="space-y-3">
-                        <div class="w-full h-52 flex items-center justify-center bg-neutral-100 dark:bg-neutral-900/40 rounded-xl overflow-hidden p-2">
-                            <img src="0002.png" alt="QRnament Visual Pattern Engine" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
-                        </div>
-                        <h3 class="font-bold text-lg text-neutral-800 dark:text-neutral-200">QRnament v3.5</h3>
-                        <p id="p-g2-desc" data-translate="g2-desc" class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                            Генератор та сканер орнаментальних QR-кодів (QRnament), інтегрованих у складні візерунки.
-                        </p>
-                    </div>
-                    <a href="https://astra31415926.github.io/QRnament2/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-6 py-3.5 text-base font-mono font-bold tracking-wider uppercase bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl shadow-md hover:shadow-xl hover:shadow-violet-500/20 active:scale-[0.98] transition-all duration-200 text-center">
-                        QRnament v3.5 →
-                    </a>
-                </div>
-            </div>
-
-            <p data-translate="e-note" class="text-sm font-mono bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 p-4 rounded-xl text-neutral-500 leading-relaxed max-w-7xl">
-                <strong class="text-neutral-700 dark:text-neutral-400">Важливе зауваження:</strong> Наразі обидва генератори працюють лише в цифровому середовищі. Розробка програмного модуля, який автоматично застосовуватиме SCI-балансування до згенерованих кодів, триває.
+          <h2 data-translate="e-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">4. Прикладне значення та діючі компоненти екосистеми</h2>
+          <div data-translate="e-body" class="text-neutral-600 dark:text-neutral-400 text-base space-y-4 leading-relaxed max-w-3xl">
+            <p>
+              Використання кольору як носія інформації — відома ідея. На екрані монітора кольорові канали ізольовані, тому багатошарові RGB-коди зчитуються без помилок. Проте при перенесенні такого коду на фізичний носій (папір, полотно) класичними методами друку виникає спектральна інтерференція (crosstalk), яка змішує канали та робить зчитування неможливим. Існуючі алгоритмічні рішення намагаються компенсувати цей ефект постфактум, але не усувають його причину.
             </p>
+            <p>
+              Модель SCI вирішує проблему на рівні фізичного синтезу. Код, надрукований або нанесений фарбами, збалансованими за принципом спектрального лімітування, зберігає структуру каналів. Це забезпечує стабільне зчитування навіть із фактурних поверхонь.
+            </p>
+          </div>
 
-            <div class="pt-2">
-                <button onclick="toggleSection('ecosystem-block', this)" class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1">
-                    <span data-translate="more-exp">+ Фізичне підтвердження концепції</span>
-                </button>
-                <div id="ecosystem-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="w-full h-44 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-lg overflow-hidden p-1 border border-neutral-200 dark:border-neutral-900">
-                            <img src="steganography_acrylic_canvas.jpg" alt="Acrylic Canvas Multi-layered Code Print Experiment" class="max-w-full max-h-full object-contain rounded-md clickable-img" onclick="openModal(this.src, this.alt)" />
-                        </div>
-                        <div class="w-full h-44 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-lg overflow-hidden p-1 border border-neutral-200 dark:border-neutral-900">
-                            <img src="handwork_01.png" alt="Ручна робота — нанесення пігментів за моделлю SCI" class="max-w-full max-h-full object-contain rounded-md clickable-img" onclick="openModal(this.src, this.alt)" />
-                        </div>
-                    </div>
-                    <p data-translate="e-exp-desc" class="text-sm font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        <strong>Реальний експеримент:</strong> Автор наніс акриловими фарбами на художнє полотно кольоровий QR-код за принципами SCI (балансування відносно спектрального лімітера). <br><br><strong class="text-indigo-600 dark:text-indigo-400">Результат:</strong> код успішно розпізнається звичайним смартфоном при різних умовах освітлення.
-                    </p>
+          <div class="grid md:grid-cols-2 gap-6 pt-4">
+            <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm">
+              <div class="space-y-3">
+                <div class="w-full h-52 flex items-center justify-center bg-neutral-100 dark:bg-neutral-900/40 rounded-xl overflow-hidden p-2">
+                  <img src="01.png" alt="Spectrum QR Code" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
                 </div>
+                <h3 class="font-bold text-lg text-neutral-800 dark:text-neutral-200">Spectrum QR</h3>
+                <p data-translate="g1-desc" class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  Генератор та сканер багатошарових кольорових QR-кодів. Інформація кодується одночасно в червоному, зеленому та синьому каналах.
+                </p>
+              </div>
+              <a 
+                href="https://astra31415926.github.io/QR.G.B.-ART/" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-full px-6 py-3.5 text-base font-mono font-bold tracking-wider uppercase bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl shadow-md hover:shadow-xl hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-200 text-center"
+              >
+                Spectrum QR →
+              </a>
             </div>
+
+            <div class="bg-neutral-50 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-sm">
+              <div class="space-y-3">
+                <div class="w-full h-52 flex items-center justify-center bg-neutral-100 dark:bg-neutral-900/40 rounded-xl overflow-hidden p-2">
+                  <img src="0002.png" alt="QRnament / Mandala" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
+                </div>
+                <h3 class="font-bold text-lg text-neutral-800 dark:text-neutral-200">QRnament v3.5</h3>
+                <p data-translate="g2-desc" class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  Генератор та сканер орнаментальних QR-кодів, інтегрованих у складні візерунки.
+                </p>
+              </div>
+              <a 
+                href="https://astra31415926.github.io/QRnament2/" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-full px-6 py-3.5 text-base font-mono font-bold tracking-wider uppercase bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl shadow-md hover:shadow-xl hover:shadow-violet-500/20 active:scale-[0.98] transition-all duration-200 text-center"
+              >
+                QRnament v3.5 →
+              </a>
+            </div>
+          </div>
+
+          <p data-translate="e-note" class="text-sm font-mono bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 p-4 rounded-xl text-neutral-500 leading-relaxed">
+            <strong class="text-neutral-700 dark:text-neutral-400">Важливе зауваження:</strong> Наразі обидва генератори працюють лише в цифровому середовищі. Вони створюють коди, що ідеально зчитуються з екрану монітора, але не виконують SCI-балансування кольорів. Розробка програмного модуля, який автоматично застосовуватиме балансування до згенерованих кодів, триває.
+          </p>
+
+          <div class="pt-2">
+            <button 
+              onclick="toggleSection('ecosystem-block', this)"
+              class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1"
+            >
+              <span data-translate="more-exp">+ Фізичне підтвердження концепції</span>
+            </button>
+            <div id="ecosystem-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl space-y-4">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="w-full h-44 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-lg overflow-hidden p-1 border border-neutral-200 dark:border-neutral-900">
+                  <img src="steganography_acrylic_canvas.jpg" alt="Acrylic Canvas Experiment" class="max-w-full max-h-full object-contain rounded-md clickable-img" onclick="openModal(this.src, this.alt)" />
+                </div>
+                <div class="w-full h-44 flex items-center justify-center bg-white dark:bg-neutral-950 rounded-lg overflow-hidden p-1 border border-neutral-200 dark:border-neutral-900">
+                  <img src="handwork_01.png" alt="Ручна робота" class="max-w-full max-h-full object-contain rounded-md clickable-img" onclick="openModal(this.src, this.alt)" />
+                </div>
+              </div>
+              <p data-translate="e-exp-desc" class="text-sm font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                В рамках експерименту автор наніс акриловими фарбами на полотно кольоровий QR-код, свідомо підібравши кольори відповідно до вимог моделі SCI (балансування відносно спектрального лімітера). 
+                <br><br>
+                <strong class="text-indigo-600 dark:text-indigo-400">Результат:</strong> код успішно зчитується з фізичного носія стандартною камерою.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section id="software" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="sw-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">5. Майбутнє проєкту: автоматизація калібрування ПЗ</h2>
-            <p data-translate="sw-body" class="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed max-w-3xl">
-                Наразі розробляється програмне забезпечення, яке автоматизує весь процес застосування моделі SCI для масового користувача без ручного прорахунку спектральних кривих.
-            </p>
+          <h2 data-translate="sw-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">5. Проєктна архітектура ПЗ: автоматизація калібрування та віртуалізація друку</h2>
+          <p data-translate="sw-body" class="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed max-w-3xl">
+            На даному етапі ведеться розробка архітектури ПЗ, що дозволить автоматизувати застосування моделі SCI для масового користувача без ручного прорахунку спектральних кривих.
+          </p>
 
-            <div class="p-5 bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-xl space-y-3 max-w-3xl">
-                <h4 data-translate="sw-list-t" class="font-mono text-sm text-neutral-700 dark:text-neutral-300 uppercase tracking-wider font-bold">Перспективний функціонал інструменту (SaaS / Web App):</h4>
-                <ol class="list-decimal pl-5 space-y-2 text-sm font-mono text-neutral-600 dark:text-neutral-400">
-                    <li data-translate="sw-l1"><strong>Автоматичне калібрування:</strong> Налаштування под конкретні пігменти, принтер та матеріал.</li>
-                    <li data-translate="sw-l2"><strong>Генерація тест-патчів:</strong> Друк та аналіз тест-патчу «Спектральні конуси».</li>
-                    <li data-translate="sw-l3"><strong>Soft-proofing:</strong> Попередній перегляд реального фізичного результату та спотворень на екрані.</li>
-                    <li data-translate="sw-l4"><strong>Автоматичний SCI-препроцесинг:</strong> Потокова підготовка та лімітування зображень.</li>
-                </ol>
+          <div class="p-5 bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-xl space-y-3">
+            <h4 data-translate="sw-list-t" class="font-mono text-sm text-neutral-700 dark:text-neutral-300 uppercase tracking-wider font-bold">Перспективний функціонал інструменту (SaaS / Web App):</h4>
+            <ol class="list-decimal pl-5 space-y-2 text-sm font-mono text-neutral-600 dark:text-neutral-400">
+              <li data-translate="sw-l1"><strong>Калібрування принтера:</strong> Друк та аналіз тест-патчу «Спектральні конуси».</li>
+              <li data-translate="sw-l2"><strong>Калібрування монітора:</strong> Оптимізація відображення під конкретний аналоговий відбиток.</li>
+              <li data-translate="sw-l3"><strong>Контроль якості поліграфії:</strong> Об'єктивний критерій сепарації каналів без спектрофотометрів.</li>
+              <li data-translate="sw-l4"><strong>Віртуалізація друку для дизайнерів:</strong> Симуляція кінцевих фізичних викривлень на екрані.</li>
+            </ol>
+          </div>
+
+          <p data-translate="sw-status" class="text-sm font-mono text-neutral-500 leading-relaxed">
+            <strong class="text-neutral-700 dark:text-neutral-400">Поточний статус та запрошення до співпраці:</strong> Теоретична база повністю сформована та підтверджено натурними експериментами на полотнах. Проєкт відкритий для співпраці з розробниками ПЗ та фахівцями у сфері комп'ютерного зору (Computer Vision) для спільної реалізації ядра алгоритму та створення зазначених програмних модулів.
+          </p>
+
+          <div class="pt-2">
+            <button 
+              onclick="toggleSection('software-block', this)"
+              class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1"
+            >
+              <span data-translate="more-specs">+ Докладний опис специфікації модулів</span>
+            </button>
+            <div id="software-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-4">
+              <div>
+                <h5 data-translate="sw-m1-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">1. Калібрування принтера</h5>
+                <p data-translate="sw-m1-b" class="leading-relaxed">Друк індивідуального тест-патчу «Спектральні конуси» на цільовому обладнанні користувача. Аналіз фотографії відбитка через камеру смартфона для миттєвої побудови матриці спотворень. Автоматичний ре-маппінг та лімітування ентропії вихідного зображення перед печаткою.</p>
+              </div>
+              <div>
+                <h5 data-translate="sw-m2-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">2. Калібрування монітора</h5>
+                <p data-translate="sw-m2-b" class="leading-relaxed">Фотографування спектральних конусів, надрукованих за SCI-методом, і налаштування монітора так, щоб канали на знімку чисто розділялися. Це дозволяє налаштувати монітор на достовірну передачу кольору відповідно до фізичних характеристик конкретного принтера та паперу.</p>
+              </div>
+              <div>
+                <h5 data-translate="sw-m3-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">3. Контроль якості поліграфічної продукції</h5>
+                <p data-translate="sw-m3-b" class="leading-relaxed">Розміщення спектральних конусів поруч із репродукцією картини. Якщо при друку вдається досягти чистої сепарації конусів під RGB-освітленням або через кольорові фільтри, то всі інші кольори на картині також будуть передані достовірно. Це дає об'єктивний критерій якості без дорогих спектрофотометрів.</p>
+              </div>
+              <div>
+                <h5 data-translate="sw-m4-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">4. Віртуалізація друку для дизайнерів</h5>
+                <p data-translate="sw-m4-b" class="leading-relaxed">Розміщення програмного режиму для монітора, який симулює кінцевий вигляд зображення після друку на конкретному обладнанні з урахуванням усіх спотворень. Дизайнер бачить не абстрактні яскраві кольори, а те, що реально вийде на папері. Це дозволяє вносити правки до друку, а не після нього.</p>
+              </div>
             </div>
-
-            <p data-translate="sw-status" class="text-sm font-mono text-neutral-500 leading-relaxed max-w-3xl">
-                <strong class="text-neutral-700 dark:text-neutral-400">Поточний статус:</strong> Теоретична база повністю сформована та підтверджена натурними експериментами. Проєкт відкритий для співпраці з розробниками ПЗ та фахівцями у сфері комп'ютерного зору (Computer Vision) для спільної реалізації ядра алгоритму.
-            </p>
-
-            <div class="pt-2">
-                <button onclick="toggleSection('software-block', this)" class="text-sm font-mono text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors flex items-center gap-1">
-                    <span data-translate="more-specs">+ Докладний опис специфікації модулів</span>
-                </button>
-                <div id="software-block" class="hidden-content mt-4 p-5 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-900 rounded-xl text-sm font-mono text-neutral-600 dark:text-neutral-400 space-y-4 max-w-3xl">
-                    <div>
-                        <h5 data-translate="sw-m1-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">1. Калібрування принтера та матеріалу</h5>
-                        <p data-translate="sw-m1-b" class="leading-relaxed">Друк індивідуального тест-патчу на цільовому обладнанні. Аналіз фотографії відбитка через камеру для побудови матриці спотворень та автоматичного лімітування зображення.</p>
-                    </div>
-                    <div>
-                        <h5 data-translate="sw-m2-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">2. Калібрування монітора та Soft-proofing</h5>
-                        <p data-translate="sw-m2-b" class="leading-relaxed">Налаштування відображення під конкретний аналоговий відбиток. Дозволяє дизайнеру бачити на моніторі не абстрактні кольори, а реальний результат на папері.</p>
-                    </div>
-                    <div>
-                        <h5 data-translate="sw-m3-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">3. Контроль якості та сепарація</h5>
-                        <p data-translate="sw-m3-b" class="leading-relaxed">Об'єктивний критерій сепарації каналів без використання дорогих спектрофотометрів за допомогою спектральних конусів поруч із репродукцією.</p>
-                    </div>
-                    <div>
-                        <h5 data-translate="sw-m4-t" class="text-neutral-800 dark:text-neutral-200 font-bold mb-1">4. Автоматичний препроцесинг</h5>
-                        <p data-translate="sw-m4-b" class="leading-relaxed">Алгоритмічний модуль для автоматичного ре-маппінгу та нормалізації вихідних файлів перед відправкою на друк відповідно до моделі SCI.</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </section>
 
         <section id="author" class="space-y-6 scroll-mt-24 border-t border-neutral-200 dark:border-neutral-900 pt-12">
-            <h2 data-translate="a-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">6. Про автора</h2>
-            <div class="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center shadow-sm">
-                
-                <div class="flex justify-center md:col-span-1">
-                    <div class="w-44 h-44 bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden p-2 flex items-center justify-center shadow-inner">
-                        <img src="0003.png" alt="Михайло Кашкаров - Автор моделі SCI" class="max-w-full max-h-full object-contain rounded-lg clickable-img" onclick="openModal(this.src, this.alt)" />
-                    </div>
-                </div>
-
-                <div class="md:col-span-2 space-y-4 flex flex-col justify-between h-full">
-                    <div class="space-y-2">
-                        <h3 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">Михайло Кашкаров</h3>
-                        <p data-translate="a-bio" class="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                            Художник та дослідник світла. Випускник Харківського художнього училища (1998) та Харківської академії дизайну і мистецтв (1999–2005). Розробник авторської RGB-техніки світлочутливого живопису. Модель SCI побудована на базі багаторічних практичних експериментів з поведінкою реальних фізичних пігментів та їх подальшої математичної формалізації.
-                        </p>
-                    </div>
-                    <div class="pt-2">
-                        <a href="https://astra31415926.github.io/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-mono font-bold tracking-wider uppercase bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-md hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-center">
-                            <span data-translate="a-link">Перейти до арт-галереї</span> &rarr;
-                        </a>
-                    </div>
-                </div>
-
+          <h2 data-translate="a-title" class="text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">6. Про автора</h2>
+          <div class="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-900 rounded-2xl p-6 grid md:grid-cols-3 gap-6 items-center shadow-sm">
+            
+            <div class="flex justify-center md:col-span-1">
+              <div class="w-44 h-44 bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden p-2 flex items-center justify-center shadow-inner">
+                <img 
+                  src="0003.png" 
+                  alt="Михайло Кашкаров - Автор моделі SCI" 
+                  class="max-w-full max-h-full object-contain rounded-lg clickable-img"
+                  onclick="openModal(this.src, this.alt)"
+                />
+              </div>
             </div>
+
+            <div class="md:col-span-2 space-y-4 flex flex-col justify-between h-full">
+              <div class="space-y-2">
+                <h3 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">Михайло Кашкаров</h3>
+                <p data-translate="a-bio" class="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  Художник та дослідник світла. Випускник Харківського художнього училища (1998) та Харківської академії дизайну і мистецтв (1999–2005). Розробник авторської RGB-техніки світлочутливого живопису. Модель SCI побудована на базі багаторічних практичних експериментів з поведінкою реальних фізичних пігментів та їх подальшої математичної формалізації.
+                </p>
+              </div>
+              <div class="pt-2">
+                <a 
+                  href="https://astra31415926.github.io/" target="_blank" rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-mono font-bold tracking-wider uppercase bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-md hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-center"
+                >
+                  <span data-translate="a-link">Перейти до арт-галереї</span> &rarr;
+                </a>
+              </div>
+            </div>
+
+          </div>
         </section>
 
-        <section class="border-t border-neutral-200 dark:border-neutral-900 pt-12 grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-sm">
-            <div class="space-y-4">
-                <h3 data-translate="c-title" class="font-bold text-base text-neutral-800 dark:text-neutral-300">Контакти</h3>
-                <div class="space-y-2 text-neutral-600 dark:text-neutral-400">
-                    <p>📞 <span data-translate="c-phone">Телефон:</span> <a href="tel:+380635058292" class="text-neutral-900 dark:text-neutral-200 hover:text-indigo-600 dark:hover:text-indigo-400">+380 63 505 8292</a></p>
-                    <p>✉️ Email: <a href="mailto:bakminsterfuler@gmail.com" class="text-neutral-900 dark:text-neutral-200 hover:text-indigo-600 dark:hover:text-indigo-400">bakminsterfuler@gmail.com</a></p>
-                    <p>💻 GitHub: <a href="https://github.com/Astra31415926" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">@Astra31415926</a></p>
-                </div>
+        <section class="border-t border-neutral-200 dark:border-neutral-900 pt-12 grid md:grid-cols-2 gap-8 font-mono text-sm">
+          <div class="space-y-4">
+            <h3 data-translate="c-title" class="font-bold text-base text-neutral-800 dark:text-neutral-300">Контакти</h3>
+            <div class="space-y-2 text-neutral-600 dark:text-neutral-400">
+              <p>📞 <span data-translate="c-phone">Телефон:</span> <a href="tel:+380635058292" class="text-neutral-900 dark:text-neutral-200 hover:text-indigo-600 dark:hover:text-indigo-400">+380 63 505 8292</a></p>
+              <p>✉️ Email: <a href="mailto:bakminsterfuler@gmail.com" class="text-neutral-900 dark:text-neutral-200 hover:text-indigo-600 dark:hover:text-indigo-400">bakminsterfuler@gmail.com</a></p>
+              <p>💻 GitHub: <a href="https://github.com/Astra31415926" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">@Astra31415926</a></p>
             </div>
-            <div class="space-y-3">
-                <h3 data-translate="pub-title" class="font-bold text-base text-neutral-800 dark:text-neutral-300">Публікації та репозиторії</h3>
-                <div class="flex flex-col gap-2">
-                    <a href="https://zenodo.org/records/19633526" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
-                        <span data-translate="pub-1">📊 Науковий препринт на Zenodo</span>
-                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
-                    </a>
-                    <a href="https://medium.com/@Bakminsterfuler/https-medium-com-new-story-be59cb4c8759" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
-                        <span data-translate="pub-2">📝 Стаття: Введення в модель SCI</span>
-                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
-                    </a>
-                    <a href="https://medium.com/@Bakminsterfuler/encoding-3-layers-of-rgb-data-for-subtractive-media-beyond-the-digital-screen-b756e8f9f9f7" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
-                        <span data-translate="pub-3">📖 Стаття: Багатошарове RGB-кодування</span>
-                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
-                    </a>
-                </div>
+          </div>
+          <div class="space-y-3">
+            <h3 data-translate="pub-title" class="font-bold text-base text-neutral-800 dark:text-neutral-300">Публікації та репозиторії</h3>
+            <div class="flex flex-col gap-2">
+              <a href="https://zenodo.org/records/19633526" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
+                <span data-translate="pub-1">📊 Науковий препринт на Zenodo</span>
+                <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
+              </a>
+              <a href="https://medium.com/@Bakminsterfuler/https-medium-com-new-story-be59cb4c8759" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
+                <span data-translate="pub-2">📝 Стаття: Введення в модель SCI</span>
+                <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
+              </a>
+              <a href="https://medium.com/@Bakminsterfuler/encoding-3-layers-of-rgb-data-for-subtractive-media-beyond-the-digital-screen-b756e8f9f9f7" target="_blank" rel="noopener noreferrer" class="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors flex justify-between items-center text-neutral-700 dark:text-neutral-300">
+                <span data-translate="pub-3">📖 Стаття: Багатошарове RGB-кодування</span>
+                <span class="text-indigo-600 dark:text-indigo-400 font-bold">&rarr;</span>
+              </a>
             </div>
+          </div>
         </section>
 
-    </main>
+      </main>
 
-    <footer class="border-t border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950 py-8 mt-20 text-center font-mono text-xs text-neutral-500">
+      <footer class="border-t border-neutral-200 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950 py-8 mt-20 text-center font-mono text-xs text-neutral-500">
         &copy; 2026 Mykhailo Kashkarov · SCI Universal Model · <span data-translate="footer-license">Вільне розповсюдження зі збереженням авторства.</span>
-    </footer>
+      </footer>
 
-    <div id="image-modal" class="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-[100] hidden opacity-0 flex items-center justify-center p-4 md:p-8 cursor-zoom-out" onclick="closeModal()">
+    <div 
+        id="image-modal" 
+        class="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-[100] hidden opacity-0 flex items-center justify-center p-4 md:p-8 cursor-zoom-out"
+        onclick="closeModal()"
+    >
         <div class="relative max-w-5xl max-h-full flex flex-col items-center justify-center">
             <img id="modal-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-neutral-200 dark:border-neutral-900">
             <p id="modal-caption" class="text-sm font-mono text-neutral-400 mt-4 bg-neutral-900/60 px-4 py-2 rounded-full border border-neutral-800/40 text-center"></p>
@@ -369,110 +425,94 @@
     <script>
         const translations = {
             uk: {
-                "nav-1": "1. Природа Crosstalk", "nav-2": "2. Суть моделі", "nav-3": "3. Оборотність", "nav-4": "4. Екосистема", "nav-5": "5. Майбутнє проєкту", "nav-6": "6. Автор",
+                "nav-1": "1. Природа Crosstalk", "nav-2": "2. Суть моделі", "nav-3": "3. Зворотність", "nav-4": "4. Екосистема", "nav-5": "5. Розробка ПЗ", "nav-6": "6. Автор",
                 "badge": "Науково-прикладна концепція",
-                "main-title": "Універсальна модель SCI (Spectral Channel Integrity)",
-                "main-desc": "Алгоритм спектральної гомогенізації середовищ для комп'ютерного зору, стеганографії та високоточного відтворення кольору.",
+                "main-title": "Універсальна модель SCI (Spectral Channel Integrity): детермінована нормалізація спектрального відгуку",
+                "main-desc": "Фундаментальний алгоритм спектральної гомогенізації середовищ для комп'ютерного зору, стеганографії та високоточного відтворення кольору.",
                 "fig-1": "Fig 1: Замкнута система спектральних констант та фіолетовий якір балансування (Reference Violet Anchor).",
                 "fig-2": "Fig 2: Порівняльний аналіз каналів: ідеальне розділення (А), міжканальне перекриття (В), лінеаризований відгук SCI (С).",
                 "fig-3": "Fig 3: Процес спектрального масштабування (Spectral Scaling) та приведення кривих до спільних меж Uref та Lref.",
                 "more": "+ Детальніше", "more-steps": "+ Детальніше (Чотири кроки повного циклу)", "more-exp": "+ Фізичне підтвердження концепції", "more-specs": "+ Докладний опис специфікації модулів",
-                
-                "t-title": "Суть проблеми та фізична природа crosstalk",
-                "t-body": "<p>Сучасні екрани (аддитивна система) і друк/художні матеріали (субтрактивна система) працюють за різними фізичними принципами. При перенесенні зображення з екрана на папір, полотно чи інший носій відбувається спотворення кольорів. Основна причина — crosstalk (міжканальне перекриття): спектри реальних пігментів частково перекриваються, тому канали R, G і B перестають бути незалежними.</p><p class='text-neutral-900 dark:text-neutral-300'>В результаті пропорції кольорів, задані в цифровому файлі, не зберігаються на фізичному носії. Стандартні ICC-профайли вирішують лише візуальну схожість для людини, але не усувають цю фундаментальну проблему.</p>",
-                "t-more": "<p>У екранах кожен кольоровий канал фізично ізольований. У друку та художніх пігментах такого немає. Жоден реальний пігмент не може ідеально поглинати один діапазон і повністю відбивати інші.</p><p>Особливо сильне перекриття спостерігається між Cyan і Magenta. Жовтий пігмент зазвичай найближчий до ідеалу. Через це при друку один канал «просочується» в інші, порушуючи вихідні пропорції.</p>",
-                
-                "s-title": "Запропоноване рішення та суть моделі SCI",
-                "s-body": "<p>Модель SCI (Spectral Channel Integrity) забезпечує узгодження екрана і фізичного носія через детерміновану нормалізацію спектрального відгуку пігментів. Додатково вводиться єдиний фізичний стандарт — комплект смугових RGB-фільтрів. Вони дозволяють об’єктивно контролювати чистоту розділення каналів як на екрані, так і на відбитку. Завдяки цьому весь ланцюг «цифровий файл → фізичний носій → зчитування» стає математично оборотним і передбачуваним.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>Принцип спектрального вирівнювання:</p><p>Алгоритм визначає найслабший канал (за динамічним діапазоном) і приводить усі три канали до єдиних верхньої та нижньої меж. Всі кольори масштабується відносно цього «якоря». Система трохи втрачає в максимальній яскравості та насиченості, але отримує стабільну незалежність каналів і точне збереження пропорцій.</p>",
-                "s-more-1": "<strong>Математична основа:</strong> Нормалізація виконується відповідно до виразу:",
-                "s-more-2": "", 
-                "s-more-3": "Де $X_{min}$ і $X_{max}$ — межі найслабшого каналу, які визначають єдині опорні межі системи.",
-                
-                "r-title": "3. Математична оборотність",
-                "r-body": "Завдяки усуненню нелінійного перекриття фізичний відбиток зберігає чітку структуру каналів. Після сканування або фотографування застосовується просте лінійне розтягнення діапазону — і ми отримуємо практично оригінальні цифрові значення без складної корекції.",
-                "r-accent": "Ключовий наслідок: Це відкриває можливість надійного зчитування багатошарових кодів з реальних фізичних об’єктів.",
-                
-                "step-1-t": "Крок 1. Фіксація стану", "step-1-b": "Збереження пропорцій спектральних каналів на фізичному носії (папір, полотно, plastic). Співвідношення енергії між червоним, зеленим та синім каналами залишається незмінним.",
-                "step-2-t": "Крок 2. Оцифрування без втрат", "step-2-b": "Фізичний відбиток повторно оцифровується камерою або сканером. Отримане цифрове зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл.",
-                "step-3-t": "Крок 3. Лінійне нормування", "step-3-b": "Застосовується просте лінійне нормування контрасту (розтягнення динамічного діапазону від мінімального до максимального значення) без ICC-профілів.",
-                "step-4-t": "Крок 4. Повна регенерація", "step-4-b": "Результатом є зображення, ідентичне вихідним RGB-характеристикам. Кольорова інформація відновлюється без втрати структури сигналу.",
-                
+                "t-title": "1. Фізична природа crosstalk",
+                "t-body": "<p>Субтрактивна модель кольороутворення (CMYK) не є фізично симетричною до адитивної моделі (RGB). В адитивних системах кожен канал може існувати незалежно, тоді як реальні пігменти мають широкі спектри поглинання та відбиття, що неминуче призводить до міжканального впливу.</p><p>Основною причиною crosstalk є спектральна неідеальність пігментів. Жоден друкарський барвник не здатний повністю поглинати цільову ділянку спектра і одночасно повністю відбивати інші ділянки. Крім того, різні пігменти мають неоднакові динамічні діапазони та різний ступінь спектрального перекриття.</p><p class='text-neutral-900 dark:text-neutral-300'><strong>Наслідок:</strong> У результаті інформація, записана в одному каналі, частково проявляється в інших каналах. Це порушує їхню незалежність і унеможливлює точне відтворення пропорцій сигналу під час перенесення багатоканальних даних із адитивного середовища на субтрактивний носій.</p>",
+                "t-more": "<p>У стандартних CMYK-системах жовтий пігмент зазвичай найближчий до ідеальної спектральної характеристики, тоді як ціан і маджента демонструють більш вузький робочий діапазон і вищий рівень міжканальної інтерференції.</p><p>На рисунку 2 показано цей ефект. У системі RGB (A) канали є незалежними та можуть бути повністю розділені. Після відтворення того самого зображення на субтрактивному носії стандартними методами (B) виникає міжканальне перекриття, через яке під час спектральної сепарації кожен канал містить <strong>інтерференційні компоненти</strong> інших каналів.</p><p>Після застосування normalization SCI (C) амплітудний дисбаланс і базові рівні вирівнюються, що суттєво зменшує crosstalk і <strong class='text-neutral-800 dark:text-neutral-200'>відновлює операційну незалежність каналів</strong>.</p>",
+                "s-title": "2. Суть моделі SCI: спектральне вирівнювання через лімітування",
+                "s-body": "<p>SCI приводить спектральні характеристики пігментів до спільних опорних меж, формуючи узгоджене середовище, у якому стає можливим детерміноване розділення інформаційних каналів.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>Принцип спектрального лімітування:</p><p>У реальних субтрактивних системах різні пігменти мають неоднакові амплітуди відбиття та різний динамічний діапазон. SCI використовує найслабший компонент системи як спектральний еталон і масштабує характеристики інших каналів відносно цього обмеження. У результаті всі канали отримують єдині верхній ($U_{ref}$) і нижній ($L_{ref}$) опорні рівні.</p><p><strong>Результат нормалізації:</strong> Після масштабування система втрачає частину візуальної яскравості та контрастності, проте набуває значно важливішої властивості — спектральної узгодженості. Амплітудний дисбаланс між пігментами усувається, а відносні співвідношення між каналами стають стабільними та відтворюваними.</p><p class='italic border-l-2 border-indigo-500/50 pl-3 text-neutral-600 dark:text-neutral-400'>На відміну від традиційної поліграфії, де пріоритетом є максимальна візуальна насиченість кольорів, модель SCI віддає пріоритет спектральній точності та збереженню інформаційної структури сигналу.</p>",
+                "s-more-1": "<strong>Спектральне масштабування:</strong> На рисунку 3 показано цей ефект. Ліворуч наведено вихідні спектральні характеристики пігментів із різними амплітудами та базовими рівнями. Праворуч — ті самі криві після застосування SCI, де всі канали приведені до спільних меж $U_{ref}$ та $L_{ref}$.",
+                "s-more-2": "<strong>Математична формалізація:</strong> Нормалізація виконується відповідно до виразу:",
+                "s-more-3": "де $U_{ref}$ та $L_{ref}$ визначають єдині опорні межі системи. Таке перетворення дозволяє зафіксувати спектральні константи середовища та забезпечити відтворюваність відносних характеристик каналів незалежно від варіацій їхніх початкових амплітуд.",
+                "r-title": "3. Зворотність процесу: цифрова регенерація",
+                "r-body": "Оскільки модель SCI зберігає строгі пропорції спектральних каналів на фізичному носії без нелінійних викривлень, процес взаємодії між цифрою та аналогом стає математично оборотним. Фізичний відбиток може бути повторно оцифрований за допомогою систем комп'ютерного зору, після чого в цифровому середовищі зображення повертається до своїх вихідних RGB-характеристик без втрати інформаційної структури сигналу.",
+                "r-accent": "Ключовий наслідок: Математична оборотність відкриває можливість для побудови надійних систем комп'ютерного зору та прихованого кодування, які безпомилково працюють на реальних фізичних об'єктах, а не тільки всередині екранних зображень.",
+                "step-1-t": "Крок 1. Фіксація стану", "step-1-b": "Модель SCI забезпечує збереження пропорцій спектральних каналів на фізичному носії (папір, полотно, пластик). Це означає, що співвідношення енергії між червоним, зеленим та синім каналами залишається незмінним — на відміну від класичного друку, де crosstalk спотворює ці пропорції непередбачувано.",
+                "step-2-t": "Крок 2. Оцифрування без втрат", "step-2-b": "Физичний відбиток може бути повторно оцифрований — сканований побутовим сканером або сфотограхований камерою (системою комп'ютерного зору). Оскільки спектральний шум відсутній, отримане цифрове зображення містить той самий набір пропорцій каналів, що й оригінальний SCI-файл до друку.",
+                "step-3-t": "Крок 3. Лінійне нормування", "step-3-b": "У цифровому середовищі застосовується просте лінійне нормування контрасту (розтягнення динамічного діапазону від мінімального до максимального значення). Жодної нелінійної корекції, жодних ICC-профілів, жодних «підборів на око».",
+                "step-4-t": "Крок 4. Повна регенерація", "step-4-b": "Результатом є зображення, ідентичне вихідним RGB-характеристикам, які були закладені в цифровий файл до друку. Кольорова інформація відновлюється без найменшої втрати — з точністю, яку дозволяє роздільна здатність сенсора.",
                 "e-title": "4. Прикладне значення та діючі компоненти екосистеми",
-                "e-body": "<p>Використання кольору як носія інформації — відома ідея. Модель SCI вирішує проблему crosstalk на рівні фізичного синтезу. Код, надрукований або нанесений фарбами, збалансованими за принципом спектрального лімітування, зберігає структуру каналів. Це забезпечує стабільне зчитування навіть із фактурних поверхонь.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>Модель SCI особливо корисна для:</p><ul class='list-disc pl-5 space-y-1 text-sm font-mono text-neutral-600 dark:text-neutral-400'><li>Багатошарових кольорових QR-кодів (Spectrum QR)</li><li>Інтеграції кодів у художні орнаменти (QRnament)</li><li>Стеганографії</li><li>Систем комп’ютерного зору, що працюють з фізичними об’єктами</li></ul>",
-                "g1-desc": "Генератор та сканер багатошарових кольорових QR-кодів (Spectrum QR). Інформація кодується одночасно в червоному, зеленому та синьому каналах.",
-                "g2-desc": "Генератор та сканер орнаментальних QR-кодів (QRnament), інтегрованих у складні візерунки.",
-                "e-note": "<strong class='text-neutral-700 dark:text-neutral-400'>Важливе зауваження:</strong> Наразі обидва генератори працюють лише в цифровому середовищі. Розробка програмного модуля, який автоматично застосовуватиме SCI-балансування до згенерованих кодів, триває.",
-                "e-exp-desc": "<strong>Реальний експеримент:</strong> Автор наніс акриловими фарбами на художній полотно кольоровий QR-код за принципами SCI (балансування відносно спектрального лімітера). <br><br><strong class='text-indigo-600 dark:text-indigo-400'>Результат:</strong> код успішно розпізнається звичайним смартфоном при різних умовах освітлення.",
-                
-                "sw-title": "5. Майбутнє проєкту: автоматизація калібрування ПЗ",
-                "sw-body": "Наразі розробляється програмне забезпечення, яке автоматизує весь процес застосування моделі SCI для масового користувача без ручного прорахунку спектральних кривих.",
+                "e-body": "<p>Використання кольору як носія інформації — відома ідея. На екрані монітора кольорові канали ізольовані, тому багатошарові RGB-коди зчитуються без помилок. Проте при перенесенні такого коду на фізичний носій (папір, полотно) класичними методами друку виникає спектральна інтеференція (crosstalk), яка змішує канали та робить зчитування неможливим. Існуючі алгоритмічні рішення намагаються компенсувати цей ефект постфактум, але не усувають його причину.</p><p>Модель SCI вирішує проблему на рівні фізичного синтезу. Код, надрукований або нанесений фарбами, збалансованими за принципом спектрального лімітування, зберігає структуру каналів. Це забезпечує стабільне зчитування навіть із фактурних поверхонь.</p>",
+                "g1-desc": "Генератор та сканер багатошарових кольорових QR-кодів. Інформація кодується одночасно в червоному, зеленому та синьому каналах.",
+                "g2-desc": "Генератор та сканер орнаментальних QR-кодів, інтегрованих у складні візерунки.",
+                "e-note": "<strong class='text-neutral-700 dark:text-neutral-400'>Важливе зауваження:</strong> Наразі обидва генератори працюють лише в цифровому середовищі. Вони створюють коди, що ідеально зчитуються з екрану монітора, але не виконують SCI-балансування кольорів. Розробка програмного модуля, який автоматично застосовуватиме балансування до згенерованих кодів, триває.",
+                "e-exp-desc": "В рамках експерименту автор наніс акриловими фарбами на полотно кольоровий QR-код, свідомо підібравши кольори відповідно до вимог моделі SCI (балансування відносно спектрального лімітера). <br><br><strong class='text-indigo-600 dark:text-indigo-400'>Результат:</strong> код успішно зчитується з фізичного носія стандартною камерою.",
+                "sw-title": "5. Проєктна архітектура ПЗ: автоматизація калібрування та віртуалізація друку",
+                "sw-body": "На даному етапі ведеться розробка архітектури ПЗ, що дозволить автоматизувати застосування моделі SCI для масового користувача без ручного прорахунку спектральних кривих.",
                 "sw-list-t": "Перспективний функціонал інструменту (SaaS / Web App):",
-                "sw-l1": "<strong>Автоматичне калібрування:</strong> Налаштування під конкретні пігменти, принтер та матеріал.",
-                "sw-l2": "<strong>Генерація тест-патчів:</strong> Друк та аналіз тест-патчу «Спектральні конуси».",
-                "sw-l3": "<strong>Soft-proofing:</strong> Попередній перегляд реального фізичного результату та спотворень на екрані.",
-                "sw-l4": "<strong>Автоматичний SCI-препроцесинг:</strong> Потокова підготовка та лімітування зображень.",
-                "sw-status": "<strong class='text-neutral-700 dark:text-neutral-400'>Поточний статус:</strong> Теоретична база повністю сформована та підтверджена натурними експериментами. Проєкт відкритий для співпраці з розробниками ПЗ та фахівцями у сфері комп'ютерного зору (Computer Vision) для спільної реалізації ядра алгоритму.",
-                
-                "sw-m1-t": "1. Калібрування принтера та матеріалу", "sw-m1-b": "Друк індивідуального тест-патчу на цільовому обладнанні. Аналіз фотографії відбитка через камеру для побудови матриці спотворень та автоматичного лімітування зображення.",
-                "sw-m2-t": "2. Калібрування монітора та Soft-proofing", "sw-m2-b": "Налаштування відображення под конкретний аналоговий відбиток. Дозволяє дизайнеру бачити на моніторі не абстрактні кольори, а реальний результат на папері.",
-                "sw-m3-t": "3. Контроль якості та сепарація", "sw-m3-b": "Об'єктивний критерій сепарації каналів без використання дорогих спектрофотометрів за допомогою спектральних конусів поруч із репродукцією.",
-                "sw-m4-t": "4. Автоматичний препроцесинг", "sw-m4-b": "Алгоритмічний модуль для автоматичного ре-маппінгу та нормалізації вихідних файлів перед відправкою на друк відповідно до моделі SCI.",
-                
+                "sw-l1": "<strong>Калібрування принтера:</strong> Друк та аналіз тест-патчу «Спектральні конуси».",
+                "sw-l2": "<strong>Калібрування монітора:</strong> Оптимізація відображення під конкретний аналоговий відбиток.",
+                "sw-l3": "<strong>Контроль якості поліграфії:</strong> Об'єктивний критерій сепарації каналів без спектрофотометрів.",
+                "sw-l4": "<strong>Віртуалізація друку для дизайнерів:</strong> Симуляція кінцевих фізичних викривлень на екрані.",
+                "sw-status": "<strong class='text-neutral-700 dark:text-neutral-400'>Поточний статус та запрошення до співпраці:</strong> Теоретична база повністю сформована та підтверджено натурними експериментами на полотнах. Проєкт відкритий для співпраці з розробниками ПЗ та фахівцями у сфері комп'ютерного зору (Computer Vision) для спільної реалізації ядра алгоритму та створення зазначених програмних модулів.",
+                "sw-m1-t": "1. Калібрування принтера", "sw-m1-b": "Друк індивідуального тест-патчу «Спектральні конуси» на цільовому обладнанні користувача. Аналіз фотографії відбитка через камеру смартфона для миттєвої побудови матриці спотворень. Автоматичний ре-маппінг та лімітування ентропії вихідного зображення перед печаткою.",
+                "sw-m2-t": "2. Калібрування монітора", "sw-m2-b": "Фотографування спектральних конусів, надрукованих за SCI-методом, і налаштування монітора так, щоб канали на знімку чисто розділялися. Це дозволяє налаштувати монітор на достовірну передачу кольору відповідно до фізичних характеристик конкретного принтера та паперу.",
+                "sw-m3-t": "3. Контроль якості поліграфічної продукції", "sw-m3-b": "Розміщення спектральних конусів поруч із репродукцією картини. Якщо при друку вдається досягти чистої сепарації конусів під RGB-освітленням або через кольорові фільтри, то всі інші кольори на картині також будуть передані достовірно. Це дає об'єктивний критерій якості без дорогих спектрофотометрів.",
+                "sw-m4-t": "4. Віртуалізація друку для дизайнерів", "sw-m4-b": "Розміщення програмного режиму для монітора, який симулює кінцевий вигляд зображення після друку на конкретном обладнанні з урахуванням усіх спотворень. Дизайнер бачить не абстрактні яскраві кольори, а те, що реально вийде на папері. Це дозволяє вносити правки до друку, а не після нього.",
                 "a-title": "6. Про автора", "a-bio": "Художник та дослідник світла. Випускник Харківського художнього училища (1998) та Харківської академії дизайну і мистецтв (1999–2005). Розробник авторської RGB-техніки світлочутливого живопису. Модель SCI побудована на базі багаторічних практичних експериментів з поведінкою реальних фізичних пігментів та їх подальшої математичної формалізації.",
                 "a-link": "Перейти до арт-галереї", "c-title": "Контакти", "c-phone": "Телефон:", "pub-title": "Публікації та репозиторії",
                 "pub-1": "📊 Науковий препринт на Zenodo", "pub-2": "📝 Стаття: Введення в модель SCI", "pub-3": "📖 Стаття: Багатошарове RGB-кодування",
                 "footer-license": "Вільне розповсюдження зі збереженням авторства."
             },
             en: {
-                "nav-1": "1. Crosstalk Nature", "nav-2": "2. Model Essence", "nav-3": "3. Reversibility", "nav-4": "4. Ecosystem", "nav-5": "5. Future Scope", "nav-6": "6. Author",
+                "nav-1": "1. Nature of Crosstalk", "nav-2": "2. Model Essence", "nav-3": "3. Reversibility", "nav-4": "4. Ecosystem", "nav-5": "5. Software", "nav-6": "6. Author",
                 "badge": "Scientific & Practical Concept",
-                "main-title": "Universal SCI Model (Spectral Channel Integrity)",
-                "main-desc": "An environmental spectral homogenization algorithm for computer vision, steganography, and high-precision color reproduction.",
+                "main-title": "Universal SCI Model (Spectral Channel Integrity): Deterministic Spectral Response Normalization",
+                "main-desc": "A fundamental algorithm of environmental spectral homogenization for computer vision, steganography, and high-precision color reproduction.",
                 "fig-1": "Fig 1: Closed system of spectral constants and Reference Violet Anchor.",
                 "fig-2": "Fig 2: Channel analysis: perfect separation (A), inter-channel crosstalk (B), linearized SCI response (C).",
                 "fig-3": "Fig 3: Spectral Scaling process and curve alignment to shared boundaries Uref and Lref.",
                 "more": "+ Details", "more-steps": "+ Details (Four Steps of Full Cycle)", "more-exp": "+ Physical Proof of Concept", "more-specs": "+ Detailed Specification of Modules",
-                
-                "t-title": "The Problem and Physical Nature of Crosstalk",
-                "t-body": "<p>Modern screens (additive system) and print/art media (subtractive system) operate on different physical principles. Transferring an image from a screen to paper, canvas, or other substrates causes color distortion. The primary cause is crosstalk (inter-channel overlap): the spectra of real pigments partially overlap, destroying the independence of R, G, and B channels.</p><p class='text-neutral-900 dark:text-neutral-300'>Consequently, the color proportions defined in a digital file are lost on the physical medium. Standard ICC profiles only address human visual similarity but do not resolve this fundamental issue.</p>",
-                "t-more": "<p>In displays, each color channel is physically isolated. In print and artistic pigments, this isolation is absent. No real pigment can perfectly absorb one band while completely reflecting others.</p><p>Particularly strong overlap occurs between Cyan and Magenta. Yellow pigments are typically closest to ideal. As a result of printing, one channel leaks into others, disrupting the original proportions.</p>",
-                
-                "s-title": "Proposed Solution and the Essence of SCI Model",
-                "s-body": "<p>The SCI (Spectral Channel Integrity) model aligns the screen and physical media through a deterministic normalization of the pigments' spectral response. Additionally, a uniform physical standard is introduced: a set of bandpass RGB filters. These enable objective verification of clean channel separation on both screens and prints, making the entire 'digital file → physical medium → decoding' pipeline mathematically reversible and predictable.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>Principle of Spectral Alignment:</p><p>The algorithm identifies the weakest channel (by dynamic range) and maps all three channels to identical upper and lower boundaries. All colors are scaled relative to this 'anchor'. The system sacrifices some maximum brightness and saturation but gains stable channel independence and precise proportion retention.</p>",
-                "s-more-1": "<strong>Mathematical Foundation:</strong> Normalization is executed according to the expression:",
-                "s-more-2": "", 
-                "s-more-3": "Where $X_{min}$ and $X_{max}$ represent the boundaries of the weakest channel, defining the shared reference thresholds of the system.",
-                
-                "r-title": "3. Mathematical Reversibility",
-                "r-body": "By eliminating non-linear overlap, the physical print preserves a distinct channel structure. Following scanning or photography, a simple linear range expansion is applied digitally, restoring near-original digital values without complex adjustments.",
-                "r-accent": "Key Takeaway: This enables reliable multi-layered code reading straight off physical objects.",
-                
-                "step-1-t": "Step 1. State Fixation", "step-1-b": "Preserving spectral channel proportions on physical media (paper, canvas, plastic). The energy ratio between red, green, and blue remains constant.",
-                "step-2-t": "Step 2. Lossless Digitization", "step-2-b": "The physical print is re-digitized via a camera or scanner. The captured digital frame retains the exact channel proportions of the original pre-print SCI file.",
-                "step-3-t": "Step 3. Linear Normalization", "step-3-b": "A simple linear contrast mapping is applied digitally (stretching the dynamic range from minimum to maximum) without ICC profiles.",
-                "step-4-t": "Step 4. Full Regeneration", "step-4-b": "The result is an image identical to the source RGB attributes. Color data recovers losslessly without degrading the signal structure.",
-                
+                "t-title": "1. Physical Nature of Crosstalk",
+                "t-body": "<p>The subtractive color model (CMYK) is not physically symmetrical to the additive model (RGB). In additive systems, each channel can exist independently, whereas real pigments possess wide absorption and reflection spectra, inevitably leading to inter-channel interference.</p><p>The root cause of crosstalk is the spectral non-ideality of pigments. No printing dye can fully absorb a target spectral area while perfectly reflecting other regions. Furthermore, different pigments have uneven dynamic ranges and various degrees of spectral overlap.</p><p class='text-neutral-900 dark:text-neutral-300'><strong>Consequence:</strong> As a result, information recorded in one channel partially manifests in others. This violates their independence and prevents exact reproduction of signal proportions when transferring multi-channel data from an additive environment to a subtractive medium.</p>",
+                "t-more": "<p>In standard CMYK systems, the yellow pigment is typically closest to an ideal spectral response, while cyan and magenta exhibit narrower operating bands and higher inter-channel interference.</p><p>Figure 2 illustrates this effect. In RGB (A), channels are independent and perfectly separable. When reproducing the same image on a subtractive medium using conventional methods (B), crosstalk emerges, causing each channel to contain <strong>interference components</strong> from other channels during spectral separation.</p><p>Applying SCI normalization (C) levels out amplitude imbalances and baselines, significantly mitigating crosstalk and <strong class='text-neutral-800 dark:text-neutral-200'>restoring operational channel independence</strong>.</p>",
+                "s-title": "2. The Essence of SCI Model: Spectral Alignment via Limitation",
+                "s-body": "<p>SCI aligns the spectral characteristics of pigments to shared reference boundaries, forming a coherent environment where deterministic separation of data channels becomes possible.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>Principle of Spectral Limitation:</p><p>In real subtractive systems, pigments display unequal reflection amplitudes and dynamic ranges. SCI treats the weakest component as a spectral baseline and scales other channels relative to this constraint. Consequently, all channels gain uniform upper ($U_{ref}$) and lower ($L_{ref}$) reference boundaries.</p><p><strong>Normalization Result:</strong> Post-scaling, the system sacrifices some visual brightness and contrast, yet secures a more critical attribute — spectral coherence. Amplitude variance between pigments is eliminated, making relative ratios between channels stable and reproducible.</p><p class='italic border-l-2 border-indigo-500/50 pl-3 text-neutral-600 dark:text-neutral-400'>Unlike traditional printing, which prioritizes maximal visual color saturation, the SCI model prioritizes spectral fidelity and preservation of the signal's informational structure.</p>",
+                "s-more-1": "<strong>Spectral Scaling:</strong> Figure 3 captures this effect. Left: raw spectral profiles of pigments with varied amplitudes and baselines. Right: the same curves post-SCI, where all channels are brought to identical boundaries $U_{ref}$ and $L_{ref}$.",
+                "s-more-2": "<strong>Mathematical Formalization:</strong> Normalization is executed according to the expression:",
+                "s-more-3": "where $U_{ref}$ and $L_{ref}$ define the shared reference thresholds. This transformation fixes environmental spectral constants, guaranteeing reproducibility of relative channel traits regardless of their baseline amplitudes.",
+                "r-title": "3. Reversibility: Digital Regeneration",
+                "r-body": "Since the SCI model preserves exact spectral channel proportions on a physical medium without non-linear distortions, the digital-to-analog interaction is mathematically reversible. A physical print can be re-digitized via computer vision systems, allowing the digital environment to fully restore original RGB parameters without degrading the signal structure.",
+                "r-accent": "Key Takeaway: Mathematical reversibility enables robust computer vision and hidden encoding systems that operate flawlessly on physical objects, rather than being confined solely to digital screens.",
+                "step-1-t": "Step 1. State Fixation", "step-1-b": "The SCI model ensures channel proportion retention on physical media (paper, canvas, plastic). This means the energy ratio between red, green, and blue remains constant — unlike classic printing, where crosstalk distorts these ratios unpredictably.",
+                "step-2-t": "Step 2. Lossless Digitization", "step-2-b": "The physical print can be rescanned or captured via a smartphone camera. Because spectral noise is absent, the captured frame contains the exact channel proportions present in the pre-print SCI file.",
+                "step-3-t": "Step 3. Linear Normalization", "step-3-b": "A simple linear contrast mapping (stretching the dynamic range from minimum to maximum) is applied digitally. No non-linear curves, color profiles, or subjective adjustments are needed.",
+                "step-4-t": "Step 4. Full Regeneration", "step-4-b": "The result is a digital file identical to the source RGB data configured prior to printing. Color data recovers losslessly, bounded only by the sensor resolution.",
                 "e-title": "4. Applied Value and Active Ecosystem Components",
-                "e-body": "<p>Using color as an information carrier is a known concept. The SCI model resolves crosstalk at the physical synthesis layer. Code printed or painted with pigments balanced via spectral limitation maintains clean channel matrices, enabling steady decoding even off heavily textured surfaces.</p><p class='text-neutral-900 dark:text-neutral-300 font-semibold'>The SCI model is particularly useful for:</p><ul class='list-disc pl-5 space-y-1 text-sm font-mono text-neutral-600 dark:text-neutral-400'><li>Multi-layered color QR codes (Spectrum QR)</li><li>Integrating codes into intricate artistic patterns (QRnament)</li><li>Steganography</li><li>Computer vision systems operating with physical objects</li></ul>",
-                "g1-desc": "Multi-layered color QR code generator and scanner (Spectrum QR). Data encodes simultaneously within red, green, and blue parameters.",
-                "g2-desc": "Ornamental QR code generator and scanner (QRnament), seamlessly integrating payloads into complex patterns.",
-                "e-note": "<strong class='text-neutral-700 dark:text-neutral-400'>Important Note:</strong> Currently, both utilities operate solely in digital environments. Development of a software module to automatically apply SCI balancing to generated codes is underway.",
-                "e-exp-desc": "<strong>Physical Experiment:</strong> The author manually painted a color QR code onto canvas using acrylics according to SCI principles (balancing relative to the spectral limiter). <br><br><strong class='text-indigo-600 dark:text-indigo-400'>Result:</strong> The code scans reliably straight off the canvas via a stock smartphone camera under various lighting conditions.",
-                
-                "sw-title": "5. Future of the Project: Automated Software Calibration",
+                "e-body": "<p>Using color as an information carrier is a known concept. On monitors, channels are isolated, allowing multi-layered RGB codes to read error-free. However, transferring these to physical media via legacy methods causes crosstalk, blending channels and blocking decoders. Existing methods attempt post-facto compensation without removing the root cause.</p><p>The SCI model intercepts the problem at the physical synthesis layer. Code generated or painted with pigments balanced via spectral limitation maintains clean channel matrices, enabling steady decoding even off heavily textured surfaces.</p>",
+                "g1-desc": "Multi-layered color QR code generator and scanner. Data encodes simultaneously within red, green, and blue parameters.",
+                "g2-desc": "Ornamental QR code generator and scanner, seamlessly integrating payloads into intricate patterns.",
+                "e-note": "<strong class='text-neutral-700 dark:text-neutral-400'>Important Note:</strong> Currently, both utilities operate solely in digital sandboxes. They output codes that read perfectly from displays but do not apply physical SCI color balancing yet. Development of an automated patch module is underway.",
+                "e-exp-desc": "During the experiment, the author manually painted a color QR code onto canvas using acrylics, deliberately picking pigment bands matching SCI requirements (balancing relative to the spectral limiter). <br><br><strong class='text-indigo-600 dark:text-indigo-400'>Result:</strong> The code scans reliably straight off the canvas via a stock camera app.",
+                "sw-title": "5. Software Architecture: Automated Calibration & Print Virtualization",
                 "sw-body": "Currently, a software pipeline is being mapped out to automate SCI model deployment for mainstream users, replacing manual spectral calculations.",
                 "sw-list-t": "Prospective Tool Functionality (SaaS / Web App):",
-                "sw-l1": "<strong>Automated Calibration:</strong> Configuration tailored to specific pigments, printers, and materials.",
-                "sw-l2": "<strong>Test Patch Generation:</strong> Printing and scanning a custom 'Spectral Cones' chart.",
-                "sw-l3": "<strong>Soft-proofing:</strong> Real-time on-screen preview of material print limitations and distortions.",
-                "sw-l4": "<strong>Automatic SCI Preprocessing:</strong> Automated batch re-mapping and image entropy limitation.",
-                "sw-status": "<strong class='text-neutral-700 dark:text-neutral-400'>Current Status:</strong> The theoretical layer is complete and proven via physical experiments. The project is open to software engineering and computer vision specialists to co-develop the core algorithm engine.",
-                
-                "sw-m1-t": "1. Printer & Material Calibration", "sw-m1-b": "Outputs a custom test patch on target hardware. Camera-based analysis instantly maps environmental distortions for automatic image limitation.",
-                "sw-m2-t": "2. Monitor Calibration & Soft-proofing", "sw-m2-b": "Aligns display profiles to match physical prints. Allows designers to see actual material boundaries on screen instead of unachievable emissive colors.",
-                "sw-m3-t": "3. Quality Control & Channel Isolation", "sw-m3-b": "An objective criterion for channel separation without expensive spectrophotometers, utilizing spectral cones positioned alongside the artwork.",
-                "sw-m4-t": "4. Automated Preprocessing", "sw-m4-b": "Algorithmic module for automated re-mapping and normalization of source files according to the SCI model prior to printing.",
-                
+                "sw-l1": "<strong>Printer Calibration:</strong> Printing and scanning a custom 'Spectral Cones' patch.",
+                "sw-l2": "<strong>Monitor Calibration:</strong> Aligning displays to match physical media characteristics.",
+                "sw-l3": "<strong>Quality Control:</strong> Objective criteria for channel isolation without spectrophotometers.",
+                "sw-l4": "<strong>Print Virtualization:</strong> Simulating physical print restrictions live on digital canvas.",
+                "sw-status": "<strong class='text-neutral-700 dark:text-neutral-400'>Current Status & Collaboration:</strong> The theoretical layer is complete and proven via physical testing. The project is open to software engineering and computer vision specialists to co-develop the core algorithm engine.",
+                "sw-m1-t": "1. Printer Calibration", "sw-m1-b": "Outputs a custom 'Spectral Cones' chart on target hardware. Analyzing a smartphone photo instantly maps environmental distortions, allowing automatic re-mapping and limitation of target files before pressing print.",
+                "sw-m2-t": "2. Monitor Calibration", "sw-m2-b": "Captures SCI-printed cones, adjusting the monitor so channels isolate perfectly in the viewport. This configures screens to truthfully render target print environments.",
+                "sw-m3-t": "3. Commercial Print Quality Control", "sw-m3-b": "Positions reference cones alongside artwork reproductions. If target prints yield clean cone separation under RGB lights or filters, full art profiles transfer authentically without expensive monitoring gear.",
+                "sw-m4-t": "4. Designer Print Virtualization", "sw-m4-b": "Deploys an on-screen preview layer simulating final ink outcomes on specific stocks. Designers see true material limitations rather than unachievable emissive saturation, allowing adjustments prior to printing.",
                 "a-title": "6. About the Author", "a-bio": "Artist and light researcher. Alumnus of the Kharkiv Art College (1998) and Kharkiv Academy of Design and Arts (1999–2005). Developer of a proprietary RGB light-sensitive painting technique. The SCI model is built upon years of hands-on physical pigment testing followed by rigorous mathematical formalization.",
                 "a-link": "Go to Art Gallery", "c-title": "Contacts", "c-phone": "Phone:", "pub-title": "Publications & Repositories",
                 "pub-1": "📊 Scientific Preprint on Zenodo", "pub-2": "📝 Article: Introduction to SCI Model", "pub-3": "📖 Article: Multi-layered RGB Encoding",
@@ -485,6 +525,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             
+            // Update buttons state
             ['lang-uk', 'lang-uk-mobile'].forEach(id => {
                 const el = document.getElementById(id);
                 if(lang === 'uk') el.classList.add('bg-indigo-600', 'text-white');
@@ -496,6 +537,7 @@
                 else el.classList.remove('bg-indigo-600', 'text-white');
             });
 
+            // Re-render elements
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
                 if (translations[lang][key]) {
@@ -513,6 +555,7 @@
                 }
             });
 
+            // Re-trigger MathJax to process formulas if visible
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise();
             }
@@ -537,11 +580,7 @@
             }
         }
 
-        // Run default static text rendering trigger on load init
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage('uk');
-        });
-
+        // Initialize Dark Mode as default configuration
         document.documentElement.classList.add('dark');
         document.body.className = "min-h-screen font-sans selection:bg-indigo-500 selection:text-white antialiased text-base md:text-lg transition-colors duration-300 bg-neutral-950 text-neutral-100";
         document.querySelector('header').className = "border-b border-neutral-900 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50";
@@ -568,7 +607,7 @@
 
         function openModal(src, alt) {
             modalImg.src = src;
-            modalCaption.textContent = alt || 'SCI Illustration';
+            modalCaption.textContent = alt || 'SCI Ілюстрація';
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.add('opacity-100');
