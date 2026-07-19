@@ -1,5 +1,5 @@
 <!-- sci-auto-desc -->
-Універсальна модель SCI: детермінована нормалізація спектрального відгуку
+SCI Universal Model — deterministic spectral response normalization.
 
 [Live site](https://astra31415926.github.io/sci-portal/)
 <!-- sci-auto-desc -->
